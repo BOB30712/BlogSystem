@@ -3,6 +3,7 @@ package com.example.model;
 import java.util.Date;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -15,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -36,9 +38,22 @@ public class Article {
 	private String content;
 	
 	@JsonIgnoreProperties("articles")
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name="arttar", joinColumns = {@JoinColumn(name="aid")}, inverseJoinColumns = {@JoinColumn(name="tid")})
 	private Set<Target> targets;
+	
+	@ManyToOne
+	@JsonIgnoreProperties("articles")
+	@JoinColumn(name = "pid")
+	private Photo photo;
+
+	public Photo getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(Photo photo) {
+		this.photo = photo;
+	}
 
 	public Integer getAid() {
 		return aid;
