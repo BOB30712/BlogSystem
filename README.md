@@ -1,4 +1,7 @@
 # BlogSystem
+![image](https://github.com/BOB30712/BlogSystem/blob/main/BlogSystemRED.png)    
+      
+        
 ## 2023年01月17日
 問題處理:Article與Target兩個Entity有外鍵連結(ManyToMany),結果當時刪除其中一列Article的資料時,連帶相關的Target與Article都刪除了。         
 處理方式:將原先@ManyToMany(cascade = CascadeType.ALL)改成@ManyToMany(cascade = CascadeType.PERSIST)     
