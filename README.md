@@ -10,4 +10,24 @@ CascadeType.PERSIST 在儲存時一併儲存被參考的物件。
 CascadeType.MERGE 在合併修改時一併合併修改被參考的物件。      
 CascadeType.REMOVE 在移除時一併移除被參考的物件。        
 CascadeType.REFRESH 在更新時一併更新被參考的物件。        
-CascadeType.ALL 無論儲存、合併、更新或移除，一併對被參考物件作出對應動作。         
+CascadeType.ALL 無論儲存、合併、更新或移除，一併對被參考物件作出對應動作。    
+
+```
+//外掛文字編輯器(CKEditor 5)套用到vue
+ <template>
+   <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+ </template>
+
+ <script>
+  import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+  export default {
+    data(){
+     return {
+      editor: ClassicEditor,
+      editorData: '<p>Content of the editor.</p>',
+      editorConfig: {},
+     }
+    } 
+  }
+ </script>
+```
