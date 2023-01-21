@@ -36,7 +36,7 @@ public class TargetServiceImpl implements TargetService{
 	@Override
 	public List<Target> getAll() {
 		//取得全部
-		return null;
+		return targetRepository.findAll();
 	}
 
 }

@@ -67,13 +67,15 @@ public class TestController {
 		
 		Set<Target> tags=new LinkedHashSet<Target>();
 		
-		//tags.add(targetRepository.findById(4).get());
-		//tags.add(targetRepository.findById(7).get());
+		tags.add(targetRepository.findById(4).get());
+		tags.add(targetRepository.findById(7).get());
 		
+		/*
 		Target tag=new Target();
 		tag.setTname("學校");
 		targetRepository.save(tag);
 		tags.add(tag);
+		*/
 		
 		Date date = new Date();  
         Timestamp ts=new Timestamp(date.getTime());
@@ -97,10 +99,19 @@ public class TestController {
 	@GetMapping("/deleteArticle/{id}")
 	@ResponseBody
 	public String deleteArticle(@PathVariable Integer id) {
-		System.out.println("getPhoto");
+		System.out.println("deleteArticle");
 		articleRepository.deleteById(id);
 		return "刪除id編號:"+id+" 文章";
 	}
+	
+	@GetMapping("/deleteTarget/{id}")
+	@ResponseBody
+	public String Target(@PathVariable Integer id) {
+		System.out.println("deleteTarget");
+		targetRepository.deleteById(id);
+		return "刪除id編號:"+id+" 標籤";
+	}
+	
 	
 	//使前端網頁可以透過href取得圖片位置
     @RequestMapping(value = "/getimg/{pid}/{pname}", method = RequestMethod.GET,

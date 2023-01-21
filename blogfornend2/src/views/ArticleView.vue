@@ -6,13 +6,14 @@
     </div>
     <div class="mb-3">
       <label for="formFile" class="form-label fs-1">上傳圖片</label>
-      <input class="form-control" type="file" id="formFile" @change="test">
+      <input class="form-control" type="file" id="formFile" @change="addfile">
     </div>
+    <img v-if="imgurl!=''" style="width: 100%; height: 400px;object-fit: contain;" :src="imgurl" alt="">
     <h2>設定標籤</h2>
     <div class="d-flex flex-wrap">
       <template v-for="(i,index) in target" :key="index">
         <div class="form-check me-2">
-          <input v-model="selecttarget" class="form-check-input" type="checkbox" :value="i.name" :id="i.name">
+          <input v-model="selecttarget" class="form-check-input" type="checkbox" :value="i.id" :id="i.name">
           <label class="form-check-label" :for="i.name">
             {{ i.name }}
           </label>
@@ -29,7 +30,7 @@
       <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
     </div>
     <div class="d-flex justify-content-center">
-      <button @click.prevent="print" type="button" class="btn btn-outline-light w-100 fs-1 fw-bold my-5">送出</button>
+      <button @click.prevent="addFileToBackend" type="button" class="btn btn-outline-light w-100 fs-1 fw-bold my-5">送出</button>
     </div>
   </div>
 </template>
@@ -44,39 +45,100 @@ export default {
       editorData: '<p>Content of the editor.</p>',
       editorConfig: {},
       imgfile: {},
+      imgurl:'',
       newTarget: '',
       title: '',
       selecttarget: [],
-      target: [
-        {
-          name: '生活',
-          select: false
-        },
-        {
-          name: '政治',
-          select: false
-        },
-        {
-          name: '知識',
-          select: true
-        }
-      ]
+      target: [],
+      pid: null
     }
   },
   methods: {
-    test (event) {
-      this.imgfile = event.target.files[0]
-      console.log(event.target.files[0])
+    addfile (event) {
+      if(event.target.files[0]!=undefined){
+        this.imgfile = event.target.files[0]  
+        const reader =  new FileReader();
+        reader.readAsDataURL(this.imgfile);
+        reader.onloadend = (e) => { //function(e) e =>
+          this.imgurl=e.target.result;
+        }
+      }else{
+        this.imgurl = ''
+      }
+    },
+    addFileToBackend () {
+      const data = new FormData();
+      data.append('image', this.imgfile);
+      data.append('name', this.imgfile.name);
+
+      this.axios.post('http://localhost:8080/File/add', data, {
+      headers: {
+          'accept': 'application/json',
+          'Accept-Language': 'en-US,en;q=0.8',
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+      }
+      })
+      .then((response) => {
+          console.log(response)
+          this.pid=response.data.pid
+          this.addarticle()
+      }).catch((error) => {
+          console.log(error)
+      });
+    },
+    getalltarget () {
+      this.axios({
+        method: 'get',
+        url: 'http://localhost:8080/Target/get/all'
+      })
+      .then((response) => {
+        console.log(response)
+        this.target = []
+        response.data.forEach(
+          (element) => {
+            this.target.push({
+              name: element.tname,
+              id: element.tid
+            })
+          }
+        )
+      })
+      .catch((error) => console.log(error))
     },
     addtarget () {
       if (this.newTarget!=='') {
         const object = {
-          name: this.newTarget,
-          select: false
+          name: this.newTarget
         }
         this.target.push(object)
+        this.axios({
+          method: 'put',
+          url: 'http://localhost:8080/Target/add/'+`${this.newTarget}`
+        })
+        .then((response) => {
+          console.log(response)
+          this.getalltarget()
+        })
+        .catch((error) => console.log(error))
         this.newTarget = ''
       }
+    },
+    addarticle () {
+      this.axios({
+        method: 'post',
+        url: 'http://localhost:8080/Article/add/',
+        data: {
+          title: this.title,
+          content: this.editorData,
+          pid: this.pid,
+          targets: this.selecttarget
+        }
+      })
+      .then((response) => {
+        console.log(response)
+      })
+      .catch((error) => console.log(error))
     },
     print () {
       /*
@@ -89,11 +151,15 @@ export default {
       )
       */
       console.log(this.imgfile)
+      console.log(this.imgfile.name)
       console.log(this.selecttarget)
       console.log(this.title)
       console.log(this.editorData)
       this.selecttarget = []
     }
+  },
+  mounted () {
+    this.getalltarget()
   }
 }
 </script>

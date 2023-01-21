@@ -29,10 +29,13 @@ public class ArticleServiceImpl implements ArticleService{
 	@Override
 	public boolean addArticle(Article article) {
 		//新增
+		articleRepository.save(article);
+		/*因為要新增的article的屬性並沒有id，所以不能用id去做辨識
 		if(articleRepository.findById(article.getAid()).isEmpty()) {
 			articleRepository.save(article);
 			return true;
 		}
+		*/
 		return false;
 	}
 

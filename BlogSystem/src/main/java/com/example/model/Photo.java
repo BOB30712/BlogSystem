@@ -25,10 +25,6 @@ public class Photo {
 	@Column(name="panme")
 	private String panme;
 	
-	@JsonManagedReference
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "photo")
-	private Set<Article> articles;
-
 	public Integer getPid() {
 		return pid;
 	}
@@ -43,15 +39,5 @@ public class Photo {
 
 	public void setPanme(String panme) {
 		this.panme = panme;
-	}
-
-	public Set<Article> getArticles() {
-		return articles;
-	}
-
-	public void setArticles(Set<Article> articles) {
-		this.articles = articles;
-	}
-
-	
+	}	
 }
