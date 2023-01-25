@@ -59,7 +59,7 @@ export default {
         .then((response) => {
           console.log(response)
           this.Article = response.data
-          this.imghref = 'http://localhost:8080/getimg/' + response.data.photo.pid + '/' + 123
+          this.imghref = 'http://localhost:8080/getimg/' + response.data.photo.pid + '/' + '圖片'
         })
         .catch((error) => console.log(error))
     },

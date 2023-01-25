@@ -3,6 +3,7 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
     <router-link to="/article">Article</router-link> |
+    <router-link to="/getallarticle">getAllArticle</router-link> |
     <router-link :to="{ name: 'readarticle', params: { id: 40 } }">ReadArticle</router-link>
   </nav>
   <div style="background-color: black;">

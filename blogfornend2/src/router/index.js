@@ -13,12 +13,17 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path: '/article',
+    path: '/article', // 撰寫文章
     name: 'article',
     component: () => import('../views/ArticleView.vue')
   },
   {
-    path: '/readarticle/:id',
+    path: '/getallarticle', // 所有文章列表
+    name: 'getallarticle',
+    component: () => import('../views/GetAllArticle.vue')
+  },
+  {
+    path: '/readarticle/:id', // 閱讀文章內容
     name: 'readarticle',
     component: () => import('../views/ReadArticle.vue')
   }
