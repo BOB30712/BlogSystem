@@ -10,7 +10,7 @@
         </div>
         <div class="col-md-8">
           <div class="card-body d-flex flex-column h-100">
-            <h5 class="card-title">{{ Article.title }}</h5>
+            <h5 class="card-title"><router-link class="text-decoration-none link-info fs-5" :to="{ name: 'readarticle', params: { id: Article.aid } }">{{ Article.title }}</router-link></h5>
             <div class="d-flex">
               <template v-for="target in Article.targets" :key="target.tid">
                 <p class="card-text">#{{target.tname}} </p>

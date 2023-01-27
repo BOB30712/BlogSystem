@@ -72,7 +72,7 @@ export default {
   mounted () {
     console.log('Param', this.$route.params.id)
     this.id = this.$route.params.id
-    // this.getArticle()
+    this.getArticle()
     this.getcreateDate()
   }
 }
