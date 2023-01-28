@@ -1,8 +1,5 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-    <router-view/>
-  </div>
+  <h1>取得所有標籤</h1>
 </template>
 
 <script>
@@ -13,8 +10,8 @@ export default {
     }
   },
   mounted () {
-    console.log(this.num)
-    this.num++
+    const date = new Date()
+    console.log(date)
   }
 }
 </script>
