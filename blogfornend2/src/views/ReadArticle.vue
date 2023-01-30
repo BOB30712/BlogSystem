@@ -1,7 +1,4 @@
 <template>
-  <h1>這是一個ReadArticle頁面</h1>
-  <h1>目前的id: {{id}}</h1>
-  <br><br><br><br><br><br>
   <p class="mb-0 header d-flex"><span class="fw-bold title mb-0 d-block px-2 me-2">標題</span>{{Article.title}}</p>
   <p class="mb-0 header d-flex"><span class="fw-bold title mb-0 d-block px-2 me-2">標籤</span>
     <template v-for="(it,index) in Article.targets" :key="index">
@@ -12,7 +9,32 @@
   <p>內文:</p>
   <div v-html="Article.content"></div>
   <p>圖片:</p>
-  <img :src="imghref"/>
+  <div class="col-md-4 d-flex justify-content-start" style="height: 200px">
+    <img :src="imghref" style="height: 100%;object-fit: contain;"/>
+  </div>
+  <p class="text-warning fs-4">留言:</p>
+  <template v-for="(it,index) in Article.messages" :key="index">
+    <div class="d-flex text-warning">
+      <p>{{ it.mname }}:</p>
+      <p class="flex-grow-1">{{ it.mcontent }}</p>
+      <p>{{ getmessagedate(it.createtime) }}</p>
+    </div>
+  </template>
+  <div class="mt-4 pb-5 container">
+    <form class="row g-3">
+      <div class="col-3">
+        <label for="messagename" class="visually-hidden">暱稱</label>
+        <input v-model="mname" type="text" class="form-control rounded-0" id="messagename" placeholder="輸入暱稱">
+      </div>
+      <div class="col">
+        <label for="messagecontext" class="visually-hidden">留言內容</label>
+        <input v-model="mcontent" type="text" class="form-control rounded-0" id="messagecontext" placeholder="輸入留言內容">
+      </div>
+      <div class="col-2">
+        <button @click.prevent="addmessage" type="button" class="btn btn-outline-light mb-3 rounded-0 w-100">送出</button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <style>
@@ -47,7 +69,9 @@ export default {
         ],
         date: '2023-01-19T06:58:56.000+00:00',
         content: '<p>修改service的新增方法</p><p>第5次測試</p>'
-      }
+      },
+      mname: '',
+      mcontent: ''
     }
   },
   methods: {
@@ -67,6 +91,26 @@ export default {
       // const d = new Date(this.Article.date).toLocaleDateString()
       const d = new Date(this.Article.date)
       this.createDate = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + '  ' + d.getHours() + ':' + d.getMinutes()
+    },
+    getmessagedate (date) {
+      const d = new Date(date)
+      return (d.getMonth() + 1) + '/' + d.getDate() + '  ' + d.getHours() + ':' + d.getMinutes()
+    },
+    addmessage () {
+      this.axios({
+        method: 'post',
+        url: 'http://localhost:8080/message/add/',
+        data: {
+          mname: this.mname,
+          mcontent: this.mcontent,
+          aid: this.Article.aid
+        }
+      })
+        .then((response) => {
+          console.log(response)
+          this.getArticle()
+        })
+        .catch((error) => console.log(error))
     }
   },
   mounted () {

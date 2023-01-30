@@ -2,11 +2,9 @@
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
+    <router-link to="/success">success</router-link> |
     <router-link to="/readpage/articlelist">所有文章列表</router-link> |
-    <router-link to="/readpage/articleread/10">閱讀第10筆文章</router-link> |
-    <router-link to="/article">Article</router-link> |
-    <router-link to="/getallarticle">getAllArticle</router-link> |
-    <router-link :to="{ name: 'readarticle', params: { id: 40 } }">ReadArticle</router-link>
+    <router-link to="/article">撰寫文章</router-link> |
   </nav>
   <div style="background-color: black;">
     <router-view/>
@@ -33,7 +31,6 @@
 }
 nav {
   padding: 30px;
-
   a {
     font-weight: bold;
     color: #2c3e50;

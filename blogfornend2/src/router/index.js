@@ -18,11 +18,17 @@ const routes = [
     component: () => import('../views/ReadPage.vue'),
     children: [
       {
-        path: 'articlelist',
+        path: 'articlelist', // 所有文章列表
         component: () => import('../views/GetAllArticle.vue')
       },
       {
-        path: 'articleread/:id',
+        path: 'articletarget/:id/:tname', // 所有相同標籤的文章ArticleByTarget
+        name: 'readpage/articletarget',
+        component: () => import('../views/GetAllArticle.vue')
+      },
+      {
+        path: 'articleread/:id', // 閱讀文章內容
+        name: 'readpage/articleread',
         component: () => import('../views/ReadArticle.vue')
       }
     ]
@@ -33,14 +39,9 @@ const routes = [
     component: () => import('../views/ArticleView.vue')
   },
   {
-    path: '/getallarticle', // 所有文章列表
-    name: 'getallarticle',
-    component: () => import('../views/GetAllArticle.vue')
-  },
-  {
-    path: '/readarticle/:id', // 閱讀文章內容
-    name: 'readarticle',
-    component: () => import('../views/ReadArticle.vue')
+    path: '/success',
+    name: 'success',
+    component: () => import('../views/SuccessView.vue')
   }
 ]
 
