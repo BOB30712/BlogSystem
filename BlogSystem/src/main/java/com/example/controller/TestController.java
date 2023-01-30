@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.dao.ArticleRepository;
+import com.example.dao.MessageRepository;
 import com.example.dao.PhotoRepository;
 import com.example.dao.TargetRepository;
 import com.example.model.Article;
+import com.example.model.Message;
 import com.example.model.Photo;
 import com.example.model.Target;
 
@@ -37,6 +39,8 @@ public class TestController {
 	private TargetRepository targetRepository;
 	@Autowired
 	private PhotoRepository photoRepository;
+	@Autowired
+	private MessageRepository messageRepository;
 
 	@GetMapping("/test")
 	@ResponseBody
@@ -112,14 +116,14 @@ public class TestController {
 		return "刪除id編號:"+id+" 標籤";
 	}
 	
-	
+	/*
 	//使前端網頁可以透過href取得圖片位置
     @RequestMapping(value = "/getimg/{pid}/{pname}", method = RequestMethod.GET,
             produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getImage(@PathVariable Integer pid,@PathVariable String pname) throws IOException {
     	try {
     		Photo photo=photoRepository.findById(pid).get();
-    		FileSystemResource imgFile = new FileSystemResource("C:/Users/USER/Desktop/images/"+photo.getPanme()+".png");
+    		FileSystemResource imgFile = new FileSystemResource("C:/Users/USER/Desktop/images/"+photo.getPanme());
     		byte[] bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());
             
             return ResponseEntity
@@ -130,5 +134,29 @@ public class TestController {
     		return null;
     	}
     }
+    */
 	
+	//刪除留言測試
+	@GetMapping("/deleteMessage/{id}")
+	@ResponseBody
+	public String deleteMessage(@PathVariable Integer id) {
+		System.out.println("deleteArticle");
+		messageRepository.deleteById(id);
+		return "刪除留言";
+	}
+	
+	//在文章中留言
+	@GetMapping("/Message/{aid}/{msg}")
+	@ResponseBody
+	public String addmessage(@PathVariable Integer aid,@PathVariable String msg) {
+		Date date = new Date();
+		Timestamp ts=new Timestamp(date.getTime());
+		Message message =new Message();
+		message.setCreatetime(null);
+		message.setMcontent(msg);
+		message.setAid(aid);
+		message.setCreatetime(ts);
+		messageRepository.save(message);
+		return "新增留言";
+	}
 }

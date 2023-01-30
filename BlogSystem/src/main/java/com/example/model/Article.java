@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -46,6 +47,18 @@ public class Article {
 	@JsonIgnoreProperties("articles")
 	@JoinColumn(name = "pid")
 	private Photo photo;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "aid")
+	private Set<Message> messages;
+	
+	public Set<Message> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(Set<Message> messages) {
+		this.messages = messages;
+	}
 
 	public Photo getPhoto() {
 		return photo;

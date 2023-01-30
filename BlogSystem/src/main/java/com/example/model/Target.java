@@ -26,9 +26,11 @@ public class Target {
 	@Column(name = "tname")
 	private String tname;
 	
+	/*
 	@JsonIgnoreProperties("targets")
 	@ManyToMany(cascade=CascadeType.ALL, mappedBy="targets")
 	private Set<Article> articles;
+	*/
 
 	public Integer getTid() {
 		return tid;
@@ -46,6 +48,7 @@ public class Target {
 		this.tname = tname;
 	}
 
+	/*
 	public Set<Article> getArticles() {
 		return articles;
 	}
@@ -53,7 +56,6 @@ public class Target {
 	public void setArticles(Set<Article> articles) {
 		this.articles = articles;
 	}
-	
-	
+	*/
 	
 }
