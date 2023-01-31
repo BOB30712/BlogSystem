@@ -6,20 +6,25 @@
     </template>
   </p>
   <p class="mb-0 header d-flex"><span class="fw-bold title d-block px-2 me-2">時間</span>{{createDate}}</p>
-  <p>內文:</p>
-  <div v-html="Article.content"></div>
-  <p>圖片:</p>
-  <div class="col-md-4 d-flex justify-content-start" style="height: 200px">
-    <img :src="imghref" style="height: 100%;object-fit: contain;"/>
-  </div>
-  <p class="text-warning fs-4">留言:</p>
-  <template v-for="(it,index) in Article.messages" :key="index">
-    <div class="d-flex text-warning">
-      <p>{{ it.mname }}:</p>
-      <p class="flex-grow-1">{{ it.mcontent }}</p>
-      <p>{{ getmessagedate(it.createtime) }}</p>
+  <div class="container mt-3">
+    <p>內文:</p>
+    <div v-html="Article.content"></div>
+    <p>圖片:</p>
+    <div class="col-md-4 d-flex justify-content-start" style="height: 200px">
+      <img :src="imghref" style="height: 100%;object-fit: contain;"/>
     </div>
-  </template>
+    <p class="text-warning fs-4">留言:</p>
+    <div class="text-center">
+      <p class="text-warning fs-4" v-if="nomessage">尚未有留言</p>
+    </div>
+    <template v-for="(it,index) in Article.messages" :key="index">
+      <div class="d-flex text-warning">
+        <p>{{ it.mname }}:</p>
+        <p class="flex-grow-1">{{ it.mcontent }}</p>
+        <p>{{ getmessagedate(it.createtime) }}</p>
+      </div>
+    </template>
+  </div>
   <div class="mt-4 pb-5 container">
     <form class="row g-3">
       <div class="col-3">
@@ -71,7 +76,8 @@ export default {
         content: '<p>修改service的新增方法</p><p>第5次測試</p>'
       },
       mname: '',
-      mcontent: ''
+      mcontent: '',
+      nomessage: true
     }
   },
   methods: {
@@ -84,6 +90,14 @@ export default {
           console.log(response)
           this.Article = response.data
           this.imghref = 'http://localhost:8080/getimg/' + response.data.photo.pid + '/' + '圖片'
+          if (this.Article.messages.length < 1) {
+            this.nomessage = true
+          } else {
+            this.nomessage = false
+            this.Article.messages.sort((a, b) => {
+              return b.createtime < a.createtime ? 1 : -1
+            })
+          }
         })
         .catch((error) => console.log(error))
     },
@@ -111,6 +125,14 @@ export default {
           this.getArticle()
         })
         .catch((error) => console.log(error))
+    },
+    RiseSort (array) {
+      let arr = []
+      arr = array
+      arr.sort(function (a, b) {
+        return b.createtime < a.createtime ? 1 : -1
+      })
+      return array
     }
   },
   mounted () {

@@ -1,11 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import ReadPage from '../views/ReadPage.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: ReadPage
   },
   {
     path: '/about',
@@ -13,7 +13,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path: '/readpage',
+    path: '/readpage', // 進入前臺
     name: 'readpage',
     component: () => import('../views/ReadPage.vue'),
     children: [
@@ -22,7 +22,7 @@ const routes = [
         component: () => import('../views/GetAllArticle.vue')
       },
       {
-        path: 'articletarget/:id/:tname', // 所有相同標籤的文章ArticleByTarget
+        path: 'articletarget/:id/:tname', // 所有相同標籤的文章
         name: 'readpage/articletarget',
         component: () => import('../views/GetAllArticle.vue')
       },
@@ -34,9 +34,19 @@ const routes = [
     ]
   },
   {
-    path: '/article', // 撰寫文章
-    name: 'article',
-    component: () => import('../views/ArticleView.vue')
+    path: '/managepage', // 進入後臺
+    name: 'managepage',
+    component: () => import('../views/ManagePage.vue'),
+    children: [
+      {
+        path: 'article',
+        component: () => import('../views/ArticleView.vue')
+      },
+      {
+        path: 'managearticle',
+        component: () => import('../views/ManageArticle.vue')
+      }
+    ]
   },
   {
     path: '/success',

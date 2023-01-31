@@ -1,6 +1,6 @@
 <template>
   <h1>標籤</h1>
-  <div class="d-flex flex-wrap" >
+  <div class="d-flex flex-wrap mb-5" >
     <template v-for="(item,index) in targetlist" :key="item.tid">
       <router-link class="text-decoration-none link-info fs-5"
       :to="{ name: 'readpage/articletarget', params: { id: item.tid, tname: item.tname} }"

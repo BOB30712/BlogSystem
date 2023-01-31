@@ -1,11 +1,4 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/success">success</router-link> |
-    <router-link to="/readpage/articlelist">所有文章列表</router-link> |
-    <router-link to="/article">撰寫文章</router-link> |
-  </nav>
   <div style="background-color: black;">
     <router-view/>
   </div>
@@ -28,16 +21,5 @@
 }
 .ArticleContent .ck-focused {
   border: 2px solid white !important;
-}
-nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 </style>
