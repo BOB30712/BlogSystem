@@ -48,4 +48,22 @@
 作用域的問題，不能使用this指定屬性或方法，
 需要改成reader.onload = e => {}，才能達到
 目的。(原因和Javascript箭頭函式有關，this
-會被綁訂在全域環境)
+會被綁訂在全域環境)    
+      
+## 2023年01月31日
+* 後端錯誤處理:刪除標籤時回饋錯誤SQLIntegrityConstraintViolationException
+  * 原文:java.sql.SQLIntegrityConstraintViolationException: Cannot delete or update a parent row: a foreign key constraint
+  * 原因:資料庫的target的tid與arttar的tid之間有外鍵約束
+* 後續處理:
+```
+//原先作法:mappedBy依據Article.java的targets屬性，無法設定CascadeType.PERSIST單獨刪除單一target資料
+//只能設定CascadeType.ALL同時刪除對應的article資料
+//透過fetch = FetchType.LAZY設定可以除非真正要使用到該屬性的值，否則不會真正將資料從表格中載入物件，但在 findAll()似乎被忽略
+@ManyToMany(cascade=CascadeType.ALL,fetch = FetchType.LAZY, mappedBy="targets")
+private Set<Article> articles;
+
+//後續作法:比照Article.java的連接方式就可以設定CascadeType.PERSIST單一刪除target資料
+@ManyToMany(cascade = CascadeType.PERSIST)
+@JoinTable(name="arttar", joinColumns = {@JoinColumn(name="tid")}, inverseJoinColumns = {@JoinColumn(name="aid")})
+private Set<Article> articles;
+```
