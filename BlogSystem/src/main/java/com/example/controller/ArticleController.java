@@ -150,6 +150,18 @@ public class ArticleController {
 		return true;
 	}
 	
+	//修改文章
+	@PostMapping("/Article/update/")
+	public boolean updateArticle(@RequestBody Map<String, Object> Data) {
+		Article article=articleService.getArticle((Integer)Data.get("aid"));
+		article.setTitle((String)Data.get("title"));
+		article.setContent((String)Data.get("content"));
+		
+		
+		return articleService.updateArticle(article);
+	}
+	
+	
 	//新增標籤
 	@PutMapping("/Target/add/{name}")//put
 	public String addTarget(@PathVariable String name) {
@@ -209,6 +221,14 @@ public class ArticleController {
 		message.setCreatetime(ts);
 		
 		return messageService.addmessage(message);
+	}
+	
+	
+	
+	//取得相同aid的留言
+	@GetMapping("/message/getbyaid/{aid}")
+	public List<Message> getmessagebyaid(@PathVariable Integer aid){
+		return messageService.getmessagebyaid(aid);
 	}
 	
 	//刪除留言

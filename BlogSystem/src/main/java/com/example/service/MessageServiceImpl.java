@@ -1,5 +1,7 @@
 package com.example.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,12 @@ public class MessageServiceImpl implements MessageService{
 		// TODO Auto-generated method stub
 		messageRepository.deleteById(mid);
 		return true;
+	}
+
+	@Override
+	public List<Message> getmessagebyaid(Integer aid) {
+		// TODO Auto-generated method stub
+		return messageRepository.findbyaid(aid);
 	}
 
 }

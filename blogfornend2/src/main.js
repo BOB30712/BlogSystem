@@ -6,9 +6,13 @@ import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap'
 import './css/test.css'
+import { ToDateFormat } from './method/fiters'
 
 const app = createApp(App)
 app.config.globalProperties.axios = axios
+app.config.globalProperties.filters = {
+  ToDateFormat
+}
 app.use(CKEditor)
 app.use(router)
 app.mount('#app')

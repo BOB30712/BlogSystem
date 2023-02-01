@@ -125,7 +125,6 @@ export default {
       }
     },
     addarticle () {
-      this.$router.push({ name: 'about'})
       this.axios({
         method: 'post',
         url: 'http://localhost:8080/Article/add/',
