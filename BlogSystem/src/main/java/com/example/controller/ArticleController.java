@@ -157,6 +157,13 @@ public class ArticleController {
 		article.setTitle((String)Data.get("title"));
 		article.setContent((String)Data.get("content"));
 		
+		List<Integer> tagsid=(List<Integer>)Data.get("currenttid");
+		Set<Target> tags=new LinkedHashSet<Target>();
+		for(Integer t:tagsid) {
+			tags.add(targetService.getTarget(t));
+		}
+		article.setTargets(tags);
+		article.setPhoto(photoService.getPhoto((Integer)Data.get("pid")));
 		
 		return articleService.updateArticle(article);
 	}

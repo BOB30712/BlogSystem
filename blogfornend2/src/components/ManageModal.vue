@@ -33,6 +33,7 @@
                 <label for="formFile" class="form-label fs-3">更改圖片</label>
                 <input class="form-control border border-dark" type="file" id="formFile" @change="addfile">
               </div>
+              <img v-if="imgurl!=''" style="width: 100%; height: 400px;object-fit: contain;" :src="imgurl" alt=""/>
               <p class="fs-3">內容</p>
               <div>
                 <ckeditor :editor="editor" v-model="Article.content" :config="editorConfig"></ckeditor>
@@ -41,7 +42,7 @@
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-danger px-5">刪除</button>
-              <button @click.prevent="updatearticle" type="button" class="btn btn-dark px-5">儲存</button>
+              <button @click.prevent="addFileToBackend" type="button" class="btn btn-dark px-5">儲存</button>
           </div>
         </div>
       </template>
@@ -97,7 +98,9 @@ export default {
       isObject: true,
       Article: {},
       TargetList: [],
-      currenttid: []
+      currenttid: [],
+      pid: '',
+      imgurl: ''
     }
   },
   props: {
@@ -128,6 +131,39 @@ export default {
       }
       return data
     },
+    addfile (event) {
+      if (event.target.files[0] !== undefined) {
+        this.imgfile = event.target.files[0]
+        const reader = new FileReader()
+        reader.readAsDataURL(this.imgfile)
+        reader.onloadend = (e) => { // function(e) e =>
+          this.imgurl = e.target.result
+        }
+      } else {
+        this.imgurl = ''
+      }
+    },
+    addFileToBackend () {
+      const data = new FormData()
+      data.append('image', this.imgfile)
+      data.append('name', this.imgfile.name)
+
+      this.axios.post('http://localhost:8080/File/add', data, {
+        headers: {
+          accept: 'application/json',
+          'Accept-Language': 'en-US,en;q=0.8',
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': `multipart/form-data; boundary=${data._boundary}`
+        }
+      })
+        .then((response) => {
+          console.log(response)
+          this.pid = response.data.pid
+          this.updatearticle()
+        }).catch((error) => {
+          console.log(error)
+        })
+    },
     getarticle (id) {
       this.axios({
         method: 'get',
@@ -140,6 +176,11 @@ export default {
           this.Article.targets.forEach(element => {
             this.currenttid.push(element.tid)
           })
+          if (res.data.photo.pid !== undefined) {
+            this.imgurl = 'http://localhost:8080/getimg/' + res.data.photo.pid + '/' + '圖片'
+          } else {
+            this.imgurl = ''
+          }
           this.gettarget()
         })
     },
@@ -164,6 +205,8 @@ export default {
         })
     },
     updatearticle () {
+      this.Article.currenttid = this.currenttid
+      this.Article.pid = this.pid
       this.axios({
         method: 'post',
         url: 'http://localhost:8080/Article/update/',
@@ -176,10 +219,6 @@ export default {
     },
     addtarget () {
       if (this.newTarget !== '') {
-        const object = {
-          name: this.newTarget
-        }
-        this.target.push(object)
         this.axios({
           method: 'put',
           url: 'http://localhost:8080/Target/add/' + `${this.newTarget}`

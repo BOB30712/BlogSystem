@@ -39,7 +39,7 @@ public class Article {
 	private String content;
 	
 	@JsonIgnoreProperties("articles")
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(name="arttar", joinColumns = {@JoinColumn(name="aid")}, inverseJoinColumns = {@JoinColumn(name="tid")})
 	private Set<Target> targets;
 	

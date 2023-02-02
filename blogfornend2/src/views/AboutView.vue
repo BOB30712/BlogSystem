@@ -19,6 +19,10 @@ export default {
   data () {
     return {
       num: 0,
+      obj: {
+        aid: 7414,
+        inner: {}
+      },
       Targets: [
         0
       ],
@@ -46,6 +50,8 @@ export default {
   },
   mounted () {
     console.log(this.num)
+    console.log(this.obj.aid)
+    console.log(this.obj.inner.nodata)
     this.num++
   }
 }
