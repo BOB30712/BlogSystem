@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
@@ -58,9 +60,13 @@ public class ArticleController {
 	@Autowired
 	private MessageService messageService;
 	
+	private static final Logger logger
+    = LoggerFactory.getLogger(ArticleController.class);
+	
 	//取得所有文章
 	@GetMapping("/Article/getAll")
 	public List<Article> getAllArticle(){
+		logger.info("取得所有文章資料");
 		return articleService.getALL();
 	}
 	
@@ -171,13 +177,23 @@ public class ArticleController {
 	
 	//新增標籤
 	@PutMapping("/Target/add/{name}")//put
-	public String addTarget(@PathVariable String name) {
+	public boolean addTarget(@PathVariable String name) {
 		Target t=new Target();
+		boolean isrepeat=true;
 		t.setTname(name);
-		if(targetService.addTarget(t)) {
-			return "新增標籤--->成功";
+		List<Target> tags=targetService.getAll();
+
+		for(Target target:tags) {
+			if(target.getTname().equals(name)) {
+				isrepeat=false;
+			}
+		}
+		
+		if(isrepeat) {
+			targetService.addTarget(t);
+			return true;
 		}else {
-			return "新增標籤--->失敗";
+			return false;
 		}
 	}
 	
@@ -230,7 +246,12 @@ public class ArticleController {
 		return messageService.addmessage(message);
 	}
 	
-	
+	//刪除文章
+	@DeleteMapping("/article/delete/{aid}")
+	public boolean deletearticle(@PathVariable Integer aid) {
+		
+		return articleService.deleteArticle(aid);
+	}
 	
 	//取得相同aid的留言
 	@GetMapping("/message/getbyaid/{aid}")
