@@ -24,7 +24,9 @@ export default {
         inner: {}
       },
       Targets: [
-        0
+        0,
+        2,
+        3
       ],
       TargetList: [
         {
@@ -38,6 +40,10 @@ export default {
         {
           tid: 2,
           tname: '第三標籤'
+        },
+        {
+          tid: 3,
+          tname: '第四標籤'
         }
       ]
     }

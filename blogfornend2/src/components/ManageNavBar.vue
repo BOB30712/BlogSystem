@@ -17,7 +17,7 @@
           <router-link class="nav-link" to="/about">null</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" to="/">離開</router-link>
+          <router-link class="nav-link" to="/readpage/articlelist">離開</router-link>
         </li>
       </ul>
     </div>

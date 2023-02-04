@@ -30,6 +30,10 @@ const routes = [
         path: 'articleread/:id', // 閱讀文章內容
         name: 'readpage/articleread',
         component: () => import('../views/ReadArticle.vue')
+      },
+      {
+        path: 'blogarchive', // 網誌存檔
+        component: () => import('../views/BlogArchive.vue')
       }
     ]
   },

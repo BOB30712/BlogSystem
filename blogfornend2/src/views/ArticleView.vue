@@ -111,14 +111,18 @@ export default {
         const object = {
           name: this.newTarget
         }
-        this.target.push(object)
         this.axios({
           method: 'put',
           url: 'http://localhost:8080/Target/add/'+`${this.newTarget}`
         })
         .then((response) => {
           console.log(response)
-          this.getalltarget()
+          if (response.data) {
+            this.getalltarget()
+            this.target.push(object)
+          } else {
+            alert("該標籤已重複")
+          }
         })
         .catch((error) => console.log(error))
         this.newTarget = ''
@@ -137,7 +141,7 @@ export default {
       })
       .then((response) => {
         console.log(response)
-        this.$router.push('/success')
+        this.$router.push('/managepage/managearticle')
       })
       .catch((error) => console.log(error))
     },

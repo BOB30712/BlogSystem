@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,6 +107,7 @@ public class ArticleController {
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
             Photo p=new Photo();
             p.setPanme(name);
+            logger.info("圖片上傳: "+name);
             return photoService.onloadPhoto(p);
         } catch (IOException ioe) {        
             throw new IOException("Could not save image file");
@@ -152,6 +154,7 @@ public class ArticleController {
 		article.setPhoto(photoService.getPhoto((Integer)Data.get("pid")));
 		
 		articleService.addArticle(article);
+		logger.info("文章新增: "+(String)Data.get("title"));
 		
 		return true;
 	}
@@ -170,7 +173,7 @@ public class ArticleController {
 		}
 		article.setTargets(tags);
 		article.setPhoto(photoService.getPhoto((Integer)Data.get("pid")));
-		
+		logger.info("文章修改: "+(Integer)Data.get("aid"));
 		return articleService.updateArticle(article);
 	}
 	
@@ -191,6 +194,7 @@ public class ArticleController {
 		
 		if(isrepeat) {
 			targetService.addTarget(t);
+			logger.info("新增標籤: "+name);
 			return true;
 		}else {
 			return false;
@@ -249,7 +253,7 @@ public class ArticleController {
 	//刪除文章
 	@DeleteMapping("/article/delete/{aid}")
 	public boolean deletearticle(@PathVariable Integer aid) {
-		
+		logger.warn("文章刪除: "+aid);
 		return articleService.deleteArticle(aid);
 	}
 	
@@ -262,6 +266,27 @@ public class ArticleController {
 	//刪除留言
 	@DeleteMapping("/message/delete/{mid}")
 	public boolean deletemessage(@PathVariable Integer mid) {
+		logger.warn("留言刪除: "+mid);
 		return messageService.deletemessage(mid);
 	}
+	
+	
+	//依據輸入的年月取得符合的文章列表
+	@GetMapping("/article/getbymonth/{year}/{month}")
+	public List<Article> getarticlebymonth(
+			@PathVariable Integer year,
+			@PathVariable Integer month){
+		 List<Article> articles=articleService.getALL();
+		 for(Article a:articles) {
+			 a.getCreatetime().getMonth();
+			 a.getCreatetime().getYear();
+		 }
+		return articles
+				.stream()
+				.filter(t->t.getCreatetime().getMonth()==(month-1)&&t.getCreatetime().getYear()==(year-1900))
+				.collect(Collectors.toList());
+	}
+	
+	
+	
 }

@@ -11,7 +11,10 @@
           <router-link class="nav-link" to="/readpage/articlelist">所有文章列表</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" to="/managepage">進入後臺</router-link>
+          <router-link class="nav-link" to="/managepage/managearticle">進入後臺</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="/readpage/blogarchive">網誌存檔</router-link>
         </li>
         <li class="nav-item">
           <router-link class="nav-link" to="/about">about</router-link>

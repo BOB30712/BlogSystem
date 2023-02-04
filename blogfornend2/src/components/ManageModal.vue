@@ -41,7 +41,7 @@
             </form>
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-danger px-5">刪除</button>
+              <button @click.prevent="deletearticle(Article.aid)" type="button" class="btn btn-danger px-5">刪除</button>
               <button @click.prevent="addFileToBackend" type="button" class="btn btn-dark px-5">儲存</button>
           </div>
         </div>
@@ -115,13 +115,18 @@ export default {
     aid () {
       this.getarticle(this.aid)
     },
-    mid () {
+    mide () {
+      this.currenttid = []
+      this.Article = {}
       this.getmessage(this.mid)
     }
   },
   methods: {
     show () {
       this.modal.show()
+    },
+    hide () {
+      this.modal.hide()
     },
     datasort (data) {
       if (data.length > 1) {
@@ -165,6 +170,7 @@ export default {
         })
     },
     getarticle (id) {
+      this.currenttid = []
       this.axios({
         method: 'get',
         url: 'http://localhost:8080/Article/get/' + id
@@ -174,7 +180,7 @@ export default {
           this.Article = res.data
           this.isObject = true
           this.Article.targets.forEach(element => {
-            this.currenttid.push(element.tid)
+            this.currenttid.push(element.tid) // 因為沒有歸零所以造成重複將數值加入
           })
           if (res.data.photo.pid !== undefined) {
             this.imgurl = 'http://localhost:8080/getimg/' + res.data.photo.pid + '/' + '圖片'
@@ -213,7 +219,7 @@ export default {
         data: this.Article
       })
         .then(() => {
-          this.modal.hide()
+          this.hide()
           this.$emit('getagain')
         })
     },
@@ -238,6 +244,16 @@ export default {
       })
         .then(() => {
           this.getmessage(this.mid)
+        })
+    },
+    deletearticle (id) {
+      this.axios({
+        method: 'delete',
+        url: 'http://localhost:8080/article/delete/' + id
+      })
+        .then(() => {
+          this.modal.hide()
+          this.$emit('getagain')
         })
     }
   },
