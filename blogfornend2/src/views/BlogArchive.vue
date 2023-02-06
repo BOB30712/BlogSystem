@@ -1,28 +1,30 @@
 <template>
-  <p><i class="bi bi-caret-right-fill"></i></p>
-  <p><i class="bi bi-caret-down-fill"></i></p>
-  <template v-for="(it,index) in currentyearlist" :key="index">
-    <h1>{{ it.year }}</h1>
-    <template v-for="(i,index) in it.monlist" :key="index">
-      <h3>{{ i }}</h3>
-    </template>
-  </template>
   <h1>網誌存檔</h1>
-  <ul class="list-unstyled">
-    <li>This is a list.</li>
-    <li>However, this style only applies to immediate child elements.</li>
-    <li>
-      <div class="d-flex">
-        <i class="bi bi-caret-right-fill text-white me-2" data-bs-toggle="collapse" data-bs-target="#collapsetest" aria-expanded="false" aria-controls="collapsetest"></i>
-        <router-link class="nav-link" to="/">2023</router-link>
-      </div>
-      <ul class="list-unstyled collapse ms-3" id="collapsetest">
-        <li><i class="bi bi-caret-right-fill text-white me-2"></i>一月</li>
-        <li><i class="bi bi-caret-right-fill text-white me-2"></i>二月</li>
-        <li><i class="bi bi-caret-right-fill text-white me-2"></i>三月</li>
-      </ul>
-    </li>
-  </ul>
+  <template v-for="(it,index) in currentyearlist" :key="index">
+    <div class="d-flex">
+      <h1>
+        <i class="bi bi-caret-right-fill text-white" data-bs-toggle="collapse" :data-bs-target="'#year'+it.year" aria-expanded="false" :aria-controls="'year'+it.year"></i>
+        {{ it.year }}
+      </h1>
+    </div>
+    <ul class="list-unstyled collapse ms-3" :id="'year'+it.year">
+      <template v-for="(i,indexx) in it.monlist" :key="indexx">
+        <li>
+          <i @click.prevent="findarticlelist(it.year,index,indexx)" class="bi bi-caret-right-fill text-white me-2" data-bs-toggle="collapse" :data-bs-target="'#year'+it.year+'month'+indexx" aria-expanded="false" :aria-controls="'year'+it.year+'month'+indexx"></i>{{ i.month }}
+          <ul class="list-unstyled collapse ms-3" :id="'year'+it.year+'month'+indexx">
+            <template v-for="(article,indexxx) in i.artticle" :key="indexxx">
+              <li><i class="bi bi-caret-right-fill text-white me-2"></i>
+                <router-link class="text-decoration-none link-info fs-5"
+                  :to="{ name: 'readpage/articleread', params: { id: article.aid} }">
+                  {{ article.title }}
+                </router-link>
+              </li>
+            </template>
+          </ul>
+        </li>
+      </template>
+    </ul>
+  </template>
 </template>
 
 <script>
@@ -30,6 +32,12 @@ export default {
   data () {
     return {
       startyear: 2023,
+      isccaret: true,
+      articlelist: [
+        '2023/02/06',
+        '2023/02/08',
+        '2023/02/10'
+      ],
       currentyearlist: []
     }
   },
@@ -45,26 +53,52 @@ export default {
       }
       return yearlist
     },
-    getmonthlist (endyear) {
+    getmonthlist (endyear, endmonth) {
       this.currentyearlist.forEach(
         (element) => {
+          element.monlist = []
           if (element.year !== endyear) {
-            element.monlist = [
-              '一月',
-              '二月',
-              '三月',
-              '四月',
-              '五月',
-              '六月',
-              '七月',
-              '八月',
-              '九月',
-              '十月',
-              '十二月'
-            ]
+            for (let i = 0; i < 12; i++) {
+              const obj = {
+                month: this.filters.MonthString(i + 1),
+                getdata: true
+              }
+              element.monlist.push(obj)
+            }
+          } else {
+            for (let i = 0; i < endmonth; i++) {
+              const obj = {
+                month: this.filters.MonthString(i + 1),
+                getdata: true
+              }
+              element.monlist.push(obj)
+            }
           }
         }
       )
+    },
+    findarticlelist (year, yindex, mindex) { // 取得的是陣列的位置
+      console.log('文章列表', yindex, mindex + 1)
+      this.currentyearlist[yindex].monlist[mindex].artticle = []
+      if (this.currentyearlist[yindex].monlist[mindex].getdata) {
+        console.log('送出請求')
+        this.axios({
+          method: 'get',
+          url: 'http://localhost:8080/article/getbymonth/' + year + '/' + (mindex + 1)
+        })
+          .then((response) => {
+            response.data.forEach((element) => {
+              const obj = {
+                aid: element.aid,
+                title: element.title
+              }
+              this.currentyearlist[yindex].monlist[mindex].artticle.push(obj)
+            })
+          })
+      } else {
+        console.log('不送出請求')
+      }
+      this.currentyearlist[yindex].monlist[mindex].getdata = !this.currentyearlist[yindex].monlist[mindex].getdata
     }
   },
   mounted () {
@@ -74,8 +108,8 @@ export default {
     console.log(d.getMonth() + 1)
     console.log(this.getyearlist(2024))
     console.log(this.getyearlist(d.getFullYear()))
-    this.currentyearlist = this.getyearlist(2033)
-    this.getmonthlist(2033)
+    this.currentyearlist = this.getyearlist(d.getFullYear())
+    this.getmonthlist(d.getFullYear(), d.getMonth() + 1)
   }
 }
 </script>

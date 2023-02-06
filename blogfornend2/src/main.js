@@ -7,12 +7,13 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'bootstrap'
 import './css/test.css'
-import { ToDateFormat } from './method/fiters'
+import { ToDateFormat, MonthString } from './method/fiters'
 
 const app = createApp(App)
 app.config.globalProperties.axios = axios
 app.config.globalProperties.filters = {
-  ToDateFormat
+  ToDateFormat,
+  MonthString
 }
 app.use(CKEditor)
 app.use(router)
