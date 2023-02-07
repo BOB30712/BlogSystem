@@ -66,4 +66,15 @@ private Set<Article> articles;
 @ManyToMany(cascade = CascadeType.PERSIST)
 @JoinTable(name="arttar", joinColumns = {@JoinColumn(name="tid")}, inverseJoinColumns = {@JoinColumn(name="aid")})
 private Set<Article> articles;
-```
+```    
+      
+## 2023年02月07日
+Spring Boot打包成jar檔
+1. 專案按右鍵選擇RUN As->Maven bulid
+2. 在Goals欄位clean package
+3. 點擊RUN(大約1分鐘，結束會在terminal出現Final Memory)
+4. jar檔會產生在Spring Boot\target的資料夾底下
+5. 到Spring Boot\target的資料夾位置，打開cmd
+6. 輸入java -jar 專案名稱.jar
+7. 結束執行程式(按下Ctrl+C)  
+
