@@ -80,11 +80,11 @@ Spring Boot打包成jar檔
       
 ## 2023年02月08日
 Windows 10 安裝WSL2
-1. 啟用"Windows 子系統Linux版"功能
+1. 啟用"Windows 子系統Linux版"功能   
   流程:控制台->程式集->程式和功能->"點選"開啟或關閉Windows功能->"勾選"Windows 子系統Linux版
-2. 啟用虛擬機器功能
+2. 啟用虛擬機器功能   
   流程:"以管理員身分開啟"PowerShell->"輸入"dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart->"重啟電腦"
-3. 下載Linux核心更新套件
-  流程:"到Windows官方教學(https://docs.microsoft.com/zh-tw/windows/wsl/install-win10)"->"點選"舊版的手動安裝->"找到步驟4"+"點擊下載最新套件"WSL2 Linux 核心更新套件 (適用於 x64 電腦)
+3. 下載Linux核心更新套件    
+  流程:"到Windows官方教學(https://docs.microsoft.com/zh-tw/windows/wsl/install-win10)" ->"點選"舊版的手動安裝->"找到步驟4"+"點擊下載最新套件"WSL2 Linux 核心更新套件 (適用於 x64 電腦)    
 補充:檢查目前檢查目前運行的WSL
   流程:"打開"PowerShell->"輸入"wsl --list --verbose或wsl -l -v
