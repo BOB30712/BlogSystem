@@ -87,5 +87,16 @@ Windows 10 安裝WSL2
 3. 下載Linux核心更新套件    
   流程:"到Windows官方教學(https://docs.microsoft.com/zh-tw/windows/wsl/install-win10)" ->"點選"舊版的手動安裝->"找到步驟4"+"點擊下載最新套件"WSL2 Linux 核心更新套件 (適用於 x64 電腦)  
         
-補充:檢查目前檢查目前運行的WSL    
-  流程:"打開"PowerShell->"輸入"wsl --list --verbose或wsl -l -v
+補充:   
+* 檢查目前檢查目前運行的WSL    
+  * 流程:"打開"PowerShell->"輸入"wsl --list --verbose或wsl -l -v      
+* Docker Containers命名     
+  * 如果未指定Container名稱，Docker會隨機指定名稱例如:crazy jones    
+* Dockerimage檔相關指令   
+  * 創建檔案:docker build . -t docker-demo-app
+  * 查詢目前存在的image檔案: docker images
+  * 執行container: docker run -p 3000:3000 -it <your-image-id> 
+  * 關閉container:ctrl + c或是開啟另外一個 terminal，然後透過指令 docker ps 找到運行中的 Container ID，然後在輸入 docker stop <ContainerID>
+  * 刪除image檔案:docker rmi <your-image-id>   
+
+  
