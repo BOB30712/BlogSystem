@@ -130,39 +130,43 @@ SQLNonTransientConnectionException: Public Key Retrieval is not allowed錯誤訊
 > 1. 專案按右鍵選擇RUN As->Maven clean
 > 2. 專案按右鍵選擇RUN As->Maven install 
 > 3. 出現錯誤訊息(因為尚未做成image檔案，也沒有產生container，所以不能透過<網路名稱>連線MYSQL的container)
->>錯誤處理:讓jar檔產生過程不去做測試，修改pom.xml
-```
+>>方法處理:讓jar檔產生過程不去做測試，修改pom.xml
+>>>```
 <build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin> <!-- start -->
-			    <artifactId>maven-surefire-plugin</artifactId>
-			    <version>2.22.2</version>
-			    <configuration>
-			        <includes>
-			            <include>TestFail.java</include>
-			        </includes>
-			        <testFailureIgnore>true</testFailureIgnore>
-			    </configuration>
-			</plugin> <!-- end -->
-		</plugins>
-		
-		<finalName>BlogSystem</finalName>
-	</build>
-```
+  <plugins>
+    <plugin>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-maven-plugin</artifactId>
+    </plugin>
+    <plugin> <!-- start -->
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.2</version>
+        <configuration>
+            <includes>
+                <include>TestFail.java</include>
+            </includes>
+            <testFailureIgnore>true</testFailureIgnore>
+        </configuration>
+    </plugin> <!-- end -->
+  </plugins>
+  
+  <finalName>BlogSystem</finalName> <!-- 設定產生的jar檔案名稱 -->
+</build>
+>>>```
 6. 產生Spring Boot專案的image
-> 1. 移動到專案的資料夾的target，可以看到要包裝成image的jar檔
-> 2. '新增'檔案並'命名'為Dockerfile，並且沒有任何副檔名(exc:'.txt')
+>1. 移動到專案的資料夾的target，可以看到要包裝成image的jar檔
+>2. '新增'檔案並'命名'為Dockerfile，並且沒有任何副檔名(exc:'.txt')
 >>Dockerfile內容
->>>FROM openjdk:17-jdk-alpine
->>>COPY <jar檔案> app.jar
->>>ENTRYPOINT ["java","-jar","app.jar"]
-> 3. '打開'命令提示字元
-> 4. '輸入'docker build . -t <image檔名>產生的image檔案   
+>>>FROM openjdk:17-jdk-alpine     
+>>>COPY <jar檔案> app.jar       
+>>>ENTRYPOINT ["java","-jar","app.jar"]     
+>3. '打開'命令提示字元
+>4. '輸入'docker build . -t <image檔名>產生的image檔案   
       
 7. 藉由步驟6產生的image檔案製作container
-
+>1. '打開'命令提示字元
+>2. '輸入'docker container run --network <網路名稱> --name <container名稱> -p <port>:<port> -d <SpringBoot image的id>  
+      
 8. 檢查container狀況
+>'開啟'Docker Desktop先後將MYSQL、Spring Boot的container啟動
+>'開啟'命令提示字元'輸入'docker logs -f <container名稱或是id> 
