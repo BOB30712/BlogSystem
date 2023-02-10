@@ -112,7 +112,7 @@ Windows 10 安裝WSL2
 > 2. '輸入'docker network create <網路名稱>
 > 3. '輸入'docker network ls(顯示所有網路)    
 3. 建立mysql的container   
-> 在命令提示字元'輸入'docker container run -p <port>:<port> --name <container名稱> --network <網路名稱> -e MYSQL_ROOT_PASSWORD=<密碼> -e MYSQL_DATABASE=<資料庫名稱> -d mysql:<mysql版本>     
+> 在命令提示字元'輸入'docker container run -p <port位置>:<port位置> --name <container名稱> --network <網路名稱> -e MYSQL_ROOT_PASSWORD=<密碼> -e MYSQL_DATABASE=<資料庫名稱> -d mysql:<mysql版本>     
 4. 修改Spring Boot的application.properties設定
 ```
 spring.datasource.url=jdbc:mysql://<網路名稱>/<資料庫名稱>?serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true
@@ -165,7 +165,7 @@ SQLNonTransientConnectionException: Public Key Retrieval is not allowed錯誤訊
       
 7. 藉由步驟6產生的image檔案製作container
 >1. '打開'命令提示字元
->2. '輸入'docker container run --network <網路名稱> --name <container名稱> -p <port>:<port> -d <SpringBoot image的id>  
+>2. '輸入'docker container run --network <網路名稱> --name <container名稱> -p <port位置>:<port位置> -d <SpringBoot image的id>  
       
 8. 檢查container狀況
 >'開啟'Docker Desktop先後將MYSQL、Spring Boot的container啟動
