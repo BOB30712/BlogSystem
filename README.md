@@ -173,6 +173,39 @@ SQLNonTransientConnectionException: Public Key Retrieval is not allowed錯誤訊
      
 * 常用docker指令
 ```shell
+//從Docker Hub下載image
+docker pull mysql
+
+//透過dockerdile產生image
+docker build . -t docker-demo-app
+
+//檢查目前有那些image檔
+docker images
+
+//透過-it後面的image id產生container
+docker run -p 3000:3000 -it 733776b1db0a
+
+//檢查目前有那些container正在執行
+docker ps
+
+//檢查目前有那些container
+docker ps -a
+
+//停止container
 docker stop mysql8
+
+//刪除container
 docker rm mysql8
+
+//開啟mysql的container，並進入mysql
+docker exec -it <container名稱> <image名稱> -u root -p
+
+//進入mysql後
+create database DevDb; -- 創建資料庫
+show databases; -- 顯示資料庫
+use DevDb; -- 使用資料庫
+quit -- 離開資料庫
+
+//檢視container在Docker預設的bridge network的IP位址
+docker network inspect bridge
 ```
