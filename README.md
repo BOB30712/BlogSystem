@@ -70,7 +70,7 @@ private Set<Article> articles;
       
 ## 2023年02月07日
 Spring Boot打包成jar檔  
-方法一  
+* 方法一  
 1. 專案按右鍵選擇RUN As->Maven bulid
 2. 在Goals欄位clean package
 3. 點擊RUN(大約1分鐘，結束會在terminal出現Final Memory)
@@ -78,7 +78,7 @@ Spring Boot打包成jar檔
 5. 到Spring Boot\target的資料夾位置，打開cmd
 6. 輸入java -jar 專案名稱.jar
 7. 結束執行程式(按下Ctrl+C)  
-方法二  
+* 方法二  
 1. 專案按右鍵選擇RUN As->Maven clean
 2. 專案按右鍵選擇RUN As->Maven install   
         
@@ -131,7 +131,7 @@ SQLNonTransientConnectionException: Public Key Retrieval is not allowed錯誤訊
 > 2. 專案按右鍵選擇RUN As->Maven install 
 > 3. 出現錯誤訊息(因為尚未做成image檔案，也沒有產生container，所以不能透過<網路名稱>連線MYSQL的container)
 >>方法處理:讓jar檔產生過程不去做測試，修改pom.xml
->>>```
+```
 <build>
   <plugins>
     <plugin>
@@ -152,7 +152,7 @@ SQLNonTransientConnectionException: Public Key Retrieval is not allowed錯誤訊
   
   <finalName>BlogSystem</finalName> <!-- 設定產生的jar檔案名稱 -->
 </build>
->>>```
+```
 6. 產生Spring Boot專案的image
 >1. 移動到專案的資料夾的target，可以看到要包裝成image的jar檔
 >2. '新增'檔案並'命名'為Dockerfile，並且沒有任何副檔名(exc:'.txt')
