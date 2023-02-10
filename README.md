@@ -170,3 +170,9 @@ SQLNonTransientConnectionException: Public Key Retrieval is not allowed錯誤訊
 8. 檢查container狀況
 >'開啟'Docker Desktop先後將MYSQL、Spring Boot的container啟動
 >'開啟'命令提示字元'輸入'docker logs -f <container名稱或是id> 
+     
+* 常用docker指令
+```shell
+docker stop mysql8
+docker rm mysql8
+```
