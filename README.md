@@ -69,7 +69,7 @@ private Set<Article> articles;
 ```    
       
 ## 2023年02月07日
-Spring Boot打包成jar檔
+Spring Boot打包成jar檔    
 1. 專案按右鍵選擇RUN As->Maven bulid
 2. 在Goals欄位clean package
 3. 點擊RUN(大約1分鐘，結束會在terminal出現Final Memory)
@@ -78,6 +78,9 @@ Spring Boot打包成jar檔
 6. 輸入java -jar 專案名稱.jar
 7. 結束執行程式(按下Ctrl+C)  
       
+1. 專案按右鍵選擇RUN As->Maven clean
+2. 專案按右鍵選擇RUN As->Maven install   
+        
 ## 2023年02月08日
 Windows 10 安裝WSL2
 1. 啟用"Windows 子系統Linux版"功能   
@@ -97,6 +100,33 @@ Windows 10 安裝WSL2
   * 查詢目前存在的image檔案: docker images
   * 執行container: docker run -p 3000:3000 -it <your-image-id> 
   * 關閉container:ctrl + c或是開啟另外一個 terminal，然後透過指令 docker ps 找到運行中的 Container ID，然後在輸入 docker stop <ContainerID>
-  * 刪除image檔案:docker rmi <your-image-id>   
+  * 刪除image檔案:docker rmi <your-image-id>  
 
-  
+## 2023年02月10日 
+在Docker上啟動Spring boot專案並且連上MYSQL container
+1. 安裝mysql的image
+2. 建立Spring Boot與MYSQL使用的網路    
+    步驟:
+    1. '打開'命令提示字元
+    2. '輸入'docker network create <網路名稱>
+    3. '輸入'docker network ls(顯示所有網路)    
+3. 建立mysql的container   
+    在命令提示字元'輸入'docker container run -p <port>:<port> --name <container名稱> --network <網路名稱> -e MYSQL_ROOT_PASSWORD=<密碼> -e MYSQL_DATABASE=<資料庫名稱> -d mysql:<mysql版本>     
+4. 修改Spring Boot的application.properties設定
+```
+spring.datasource.url=jdbc:mysql://<網路名稱>/<資料庫名稱>?serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.http.encoding.force=true
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+//備註:未設定allowPublicKeyRetrieval=true，會有
+SQLNonTransientConnectionException: Public Key Retrieval is not allowed錯誤訊息
+```
+5. 將Spring Boot打包成jar檔
+>>1. 專案按右鍵選擇RUN As->Maven clean
+>>2. 專案按右鍵選擇RUN As->Maven install 
+
+
