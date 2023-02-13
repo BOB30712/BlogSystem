@@ -170,7 +170,36 @@ SQLNonTransientConnectionException: Public Key Retrieval is not allowed錯誤訊
 8. 檢查container狀況
 >'開啟'Docker Desktop先後將MYSQL、Spring Boot的container啟動
 >'開啟'命令提示字元'輸入'docker logs -f <container名稱或是id> 
-     
+
+## 2023年02月13日
+* 前端vue打包成image，並且將容器的port設定在8081
+>過程中遇到的問題
+>>1. 生成image檔案時，出現Conflicting peer dependancy: eslint-plugin-vue@7.20.0
+>>>把原先Dockerfile的RUN npm install改成RUN npm install --force
+>>>json設定中的版本衝突，因此可以使用--legacy-peer-deps(完全忽略所有使用最新版本)或--force(強制使用最新)
+>>2. 產生的container只能設定port8080，會和後端的port位置衝突
+>>>將生成container的指令改成docker run -p 8081:8080 -d <image檔案的名稱>
+      
+       
+>Dockerfile內容
+>>FROM node:lts-alpine
+>>#install simple http server for serving static content
+>>RUN npm install -g http-server
+>>#make the 'app' folder the current working directory
+>>WORKDIR /app
+>>#copy both 'package.json' and 'package-lock.json' (if available)
+>>COPY package*.json ./
+>>#install project dependencies
+>>#install simple http server for serving static content
+>>RUN npm install --force
+>>#copy project files and folders to the current working directory (i.e. 'app' folder)
+>>COPY . .
+>>#build app for production with minification
+>>RUN npm run build
+>>EXPOSE 8081
+>>CMD [ "http-server", "dist" ]
+
+      
 * 常用docker指令
 ```shell
 //從Docker Hub下載image
@@ -182,7 +211,7 @@ docker build . -t docker-demo-app
 //檢查目前有那些image檔
 docker images
 
-//透過-it後面的image id產生container
+//透過-it後面的image id產生container，左側的3000port代表本地端並且對應到右側容器的3000port，因此在本地端可以在port設定為30001連結到container
 docker run -p 3000:3000 -it 733776b1db0a
 
 //檢查目前有那些container正在執行
