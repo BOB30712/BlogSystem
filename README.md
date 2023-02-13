@@ -156,7 +156,7 @@ SQLNonTransientConnectionException: Public Key Retrieval is not allowed錯誤訊
 6. 產生Spring Boot專案的image
 >1. 移動到專案的資料夾的target，可以看到要包裝成image的jar檔
 >2. '新增'檔案並'命名'為Dockerfile，並且沒有任何副檔名(exc:'.txt')
->>Dockerfile內容
+>>Dockerfile內容       
 >>>FROM openjdk:17-jdk-alpine     
 >>>COPY <jar檔案> app.jar       
 >>>ENTRYPOINT ["java","-jar","app.jar"]     
@@ -181,23 +181,23 @@ SQLNonTransientConnectionException: Public Key Retrieval is not allowed錯誤訊
 >>>將生成container的指令改成docker run -p 8081:8080 -d <image檔案的名稱>
       
        
->Dockerfile內容
->>FROM node:lts-alpine
->>#install simple http server for serving static content
->>RUN npm install -g http-server
->>#make the 'app' folder the current working directory
->>WORKDIR /app
->>#copy both 'package.json' and 'package-lock.json' (if available)
->>COPY package*.json ./
->>#install project dependencies
->>#install simple http server for serving static content
->>RUN npm install --force
->>#copy project files and folders to the current working directory (i.e. 'app' folder)
->>COPY . .
->>#build app for production with minification
->>RUN npm run build
->>EXPOSE 8081
->>CMD [ "http-server", "dist" ]
+>Dockerfile內容    
+>>FROM node:lts-alpine     
+>>#install simple http server for serving static content    
+>>RUN npm install -g http-server     
+>>#make the 'app' folder the current working directory     
+>>WORKDIR /app     
+>>#copy both 'package.json' and 'package-lock.json' (if available)     
+>>COPY package*.json ./     
+>>#install project dependencies     
+>>#install simple http server for serving static content     
+>>RUN npm install --force     
+>>#copy project files and folders to the current working directory (i.e. 'app' folder)     
+>>COPY . .     
+>>#build app for production with minification      
+>>RUN npm run build      
+>>EXPOSE 8081     
+>>CMD [ "http-server", "dist" ]      
 
       
 * 常用docker指令
