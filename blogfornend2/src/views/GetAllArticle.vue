@@ -6,7 +6,7 @@
     <div class="card mb-3 rounded-0 bg-dark">
       <div class="row g-0">
         <div class="col-md-4 d-flex justify-content-center" style="height: 200px">
-          <img v-if="Article.photo == null" src="../../../../../sup.png" style="height: 100%;object-fit: contain;" alt="">
+          <img v-if="Article.photo == null" src="#" style="height: 100%;object-fit: contain;" alt="">
           <img v-else :src="'http://localhost:8080/getimg/'+Article.photo.pid+'/' + '圖片'"/>
         </div>
         <div class="col-md-8">

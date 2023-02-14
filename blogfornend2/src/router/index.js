@@ -38,6 +38,11 @@ const routes = [
     ]
   },
   {
+    path: '/login', // 登入畫面
+    name: 'login',
+    component: () => import('../views/LoginView.vue')
+  },
+  {
     path: '/managepage', // 進入後臺
     name: 'managepage',
     component: () => import('../views/ManagePage.vue'),
@@ -49,6 +54,10 @@ const routes = [
       {
         path: 'managearticle',
         component: () => import('../views/ManageArticle.vue')
+      },
+      {
+        path: 'adminview',
+        component: () => import('../views/AdminView.vue')
       }
     ]
   },

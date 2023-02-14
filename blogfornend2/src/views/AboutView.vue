@@ -10,6 +10,11 @@
       </div>
     </template>
     <button @click="enter">按鈕</button>
+    <p v-if="image==''">今天天氣真好</p>
+    <p v-else>但是我忘記帶雨傘出門</p>
+    <button @click="image=1">chamge</button>
+    <button v-if="image==''" @click="image=1">123</button>
+    <button v-else @click="image=1">456</button>
     <router-view/>
   </div>
 </template>
@@ -19,6 +24,7 @@ export default {
   data () {
     return {
       num: 0,
+      image: '',
       obj: {
         aid: 7414,
         inner: {}
@@ -55,10 +61,16 @@ export default {
     }
   },
   mounted () {
-    console.log(this.num)
-    console.log(this.obj.aid)
-    console.log(this.obj.inner.nodata)
+    // console.log(this.num)5*60*1000
+    // console.log(this.obj.aid)
+    // console.log(this.obj.inner.nodata)
+    console.log('image', this.image.num)
     this.num++
+    window.setInterval(
+      () => {
+        console.log('每五秒要做的事')
+      }, 5000
+    )
   }
 }
 </script>

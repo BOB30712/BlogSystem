@@ -42,7 +42,8 @@
           </div>
           <div class="modal-footer">
               <button @click.prevent="deletearticle(Article.aid)" type="button" class="btn btn-danger px-5">刪除</button>
-              <button @click.prevent="addFileToBackend" type="button" class="btn btn-dark px-5">儲存</button>
+              <button v-if="this.imgfile.name==undefined" @click.prevent="updatearticle" type="button" class="btn btn-dark px-5">儲存</button>
+              <button v-else @click.prevent="addFileToBackend" type="button" class="btn btn-dark px-5">儲存(包含圖片)</button>
           </div>
         </div>
       </template>
@@ -100,6 +101,7 @@ export default {
       TargetList: [],
       currenttid: [],
       pid: '',
+      imgfile: '',
       imgurl: ''
     }
   },
@@ -145,13 +147,14 @@ export default {
           this.imgurl = e.target.result
         }
       } else {
+        this.imgfile = ''
         this.imgurl = ''
       }
     },
     addFileToBackend () {
       const data = new FormData()
       data.append('image', this.imgfile)
-      data.append('name', this.imgfile.name)
+      data.append('name', this.imgfile.name) // 如果imgfile為空值，呼叫imgfile.name導致回報錯誤
 
       this.axios.post('http://localhost:8080/File/add', data, {
         headers: {
@@ -211,8 +214,8 @@ export default {
         })
     },
     updatearticle () {
-      this.Article.currenttid = this.currenttid
-      this.Article.pid = this.pid
+      this.Article.currenttid = this.currenttid // 20230214造成無法在沒有圖片時修改文章
+      this.Article.pid = this.pid // 20230214造成無法在沒有圖片時修改文章
       this.axios({
         method: 'post',
         url: 'http://localhost:8080/Article/update/',
