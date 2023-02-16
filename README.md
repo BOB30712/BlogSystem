@@ -199,8 +199,35 @@ SQLNonTransientConnectionException: Public Key Retrieval is not allowed錯誤訊
 >>EXPOSE 8081     
 >>CMD [ "http-server", "dist" ]      
 
-      
-* 常用docker指令
+## 2023年02月16日
+* 紀錄版本更新後的Spring Security如何去做權限控制，並由mysql資料去比較用戶
+  * 舊版的Security會產生一個類別並且繼承WebSecurityConfigurerAdapter，但新版本的則是需要在類別中使用SecurityFilterChain套件
+  * 需要引用PasswordEncoder套件，進行密碼加密，不過可以寫一個方法用明文去驗證
+  ```
+  	  //建立密碼加密方式以純文字驗證
+	  public class PasswordEnconderTest implements PasswordEncoder {
+	    @Override
+	    public String encode(CharSequence charSequence) {
+	        return charSequence.toString();
+	    }
+
+	    @Override
+	    public boolean matches(CharSequence charSequence, String s) {
+	        return charSequence.toString().equals(s);
+	    }
+	  }
+	  //密碼加密方式
+	  @Bean
+	  public PasswordEncoder passwordEncoder(){
+	      return new PasswordEnconderTest();
+	  }
+  ```
+* 主要遇到問題:用戶登入後無法登出
+* 解決方法:尚未確定原因，但在透過Security預設的登入畫面formLogin()，就可以登出。
+         
+
+
+## 常用docker指令
 ```shell
 //從Docker Hub下載image
 docker pull mysql
