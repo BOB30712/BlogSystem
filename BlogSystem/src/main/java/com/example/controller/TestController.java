@@ -33,6 +33,8 @@ import com.example.model.Message;
 import com.example.model.Photo;
 import com.example.model.Target;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -48,7 +50,8 @@ public class TestController {
 	private PhotoRepository photoRepository;
 	@Autowired
 	private MessageRepository messageRepository;
-
+	
+	
 	@GetMapping("/test")
 	public String Hello() {
 		return "login";

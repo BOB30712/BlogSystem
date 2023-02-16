@@ -14,7 +14,7 @@
           <router-link class="nav-link" to="/managepage/managearticle">管理文章</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" to="/managepage/">管理管理員</router-link>
+          <router-link class="nav-link" to="/managepage/adminview">管理管理員</router-link>
         </li>
         <li class="nav-item">
           <router-link class="nav-link" to="/about">null</router-link>

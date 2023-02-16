@@ -301,8 +301,27 @@ public class ArticleController {
 	
 	//取得所有管理員
 	@GetMapping("/admin/getall")
-	public List<Systemadmin> getalladmin(){
-		return systemadminService.getALL();
+	public List<Systemadmin> getalladmin(@RequestHeader HttpHeaders  headers,HttpServletRequest request){
+		String authorHeader = request.getHeader(AUTHORIZATION);
+		try {
+			Date date = new Date();
+			Timestamp ts=new Timestamp(date.getTime());
+			String token =authorHeader;
+			Claims claims = Jwts.parser().setSigningKey("MySecret").parseClaimsJws(token).getBody();
+			Systemadmin admin=systemadminService.getSystemadmin((String)(claims.get("sub")));
+			admin.setLastlogin(ts);
+			systemadminService.updateSystemadmin(admin);
+			System.out.println(claims);//claims={sub=admin0214, jti=123, exp=1676535146}
+			if(!claims.get("jti").equals("大總管")) {
+				System.out.println("警告!有非大總管等級管理員，要求所有管理員資料");
+				return null;
+			}
+			return systemadminService.getALL();
+		}catch (Exception e) {
+			System.err.println("Error : "+e);
+			return null;
+		}
+		
 	}
 	
 	//輸入帳號->登入後臺
@@ -310,6 +329,7 @@ public class ArticleController {
 	public String adminlogin(@RequestBody Map<String, Object> Data) {
 		Data.get("adminaccount");
 		Data.get("adminpassword");
+		Systemadmin systemadmin = systemadminService.getSystemadmin((String)Data.get("adminaccount")) ;
 		if(!systemadminService.checkadmin((String)Data.get("adminaccount"), (String)Data.get("adminpassword"))) {
 			return null;
 		}else {
@@ -318,6 +338,7 @@ public class ArticleController {
 			Date expireDate = new Date(System.currentTimeMillis()+5*60*1000); //tocken期限為5分鐘
 			String jwtTocken = Jwts.builder()
 								.setSubject((String)Data.get("adminaccount"))
+								.setId(systemadmin.getLevel())
 								.setExpiration(expireDate)
 								.signWith(SignatureAlgorithm.HS256,"MySecret")
 								.compact();
@@ -337,6 +358,7 @@ public class ArticleController {
 			Systemadmin admin=systemadminService.getSystemadmin((String)(claims.get("sub")));
 			admin.setLastlogin(ts);
 			systemadminService.updateSystemadmin(admin);
+			System.out.println(claims);//claims={sub=admin0214, jti=123, exp=1676535146}
 			return admin;
 		}catch (Exception e) {
 			System.err.println("Error : "+e);
@@ -344,7 +366,10 @@ public class ArticleController {
 		}
 	}
 	
+	
 	//新增管理員
+	
+	
 	//刪除管理員
 	
 }

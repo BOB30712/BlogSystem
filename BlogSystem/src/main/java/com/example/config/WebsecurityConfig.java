@@ -7,7 +7,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import jakarta.servlet.ServletException;
 
@@ -18,28 +20,7 @@ public class WebsecurityConfig {
 			
 	  @Bean
 	  public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-		  /*
-		http.cors().and().csrf().disable();
-	    http.authorizeHttpRequests((requests) -> requests
-				        .requestMatchers("/test2").authenticated()
-				        .requestMatchers("/test").hasAuthority("大總管")
-				        .anyRequest()
-				        .permitAll())
-	    
-	    .httpBasic()
-	    .and()
-        .logout()
-        .addLogoutHandler(adminLogout)
-        .logoutSuccessUrl("/logoutSuccess");
-        /*
-        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-        .logoutSuccessUrl("/logoutSuccess")
-        .deleteCookies("JSESSIONID")
-        .clearAuthentication(true)
-        .invalidateHttpSession(true);
-        
-        .addLogoutHandler(adminLogout)
-        */
+
 	    http
 	    	.authorizeHttpRequests()
 	    			.requestMatchers("/test").hasAuthority("大總管")
@@ -56,7 +37,8 @@ public class WebsecurityConfig {
 				.permitAll()
 			.and()
 				.cors().and().csrf().disable();
-	       
+	    //http.addFilterBefore(null, BasicAuthenticationFilter.class);
+		//http.addFilterBefore(null, UsernamePasswordAuthenticationFilter.class);
 	    return http.build();
 	  }
 	  //建立密碼加密方式以純文字驗證

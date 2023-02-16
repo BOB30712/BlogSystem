@@ -25,8 +25,6 @@ export default {
   },
   methods: {
     login () {
-      console.log('帳號:', this.account)
-      console.log('密碼:', this.password)
       this.axios({
         method: 'post',
         url: 'http://localhost:8080/admin/login/',
