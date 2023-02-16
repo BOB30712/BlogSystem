@@ -12,10 +12,14 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +32,9 @@ import com.example.model.Article;
 import com.example.model.Message;
 import com.example.model.Photo;
 import com.example.model.Target;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 @Controller
@@ -43,9 +50,25 @@ public class TestController {
 	private MessageRepository messageRepository;
 
 	@GetMapping("/test")
-	@ResponseBody
 	public String Hello() {
-		return "Hello World";
+		return "login";
+	}
+	@GetMapping("/log")
+	public String logout() {
+		return "login";
+	}
+	@PostMapping("/logoutlogout")
+	@ResponseBody
+	public String logout2(HttpServletRequest request) throws ServletException {
+		request.logout();
+		return "login";
+	}
+	
+	
+	@GetMapping("/logoutSuccess")
+	@ResponseBody
+	public String logoutSuccess() {
+		return "logout logout";
 	}
 	
 	@GetMapping("/getArticle/{id}")
