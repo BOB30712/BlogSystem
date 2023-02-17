@@ -3,6 +3,20 @@ export function ToDateFormat (date) {
   return (d.getMonth() + 1) + '/' + d.getDate() + '  ' + d.getHours() + ':' + d.getMinutes()
 }
 
+export function ToDateFormat2 (date) {
+  const d = new Date(date)
+  const Year = d.getFullYear()
+  let Month = (d.getMonth() + 1)
+  let Day = d.getDate()
+  if ((d.getMonth() + 1) < 10) {
+    Month = '0' + (d.getMonth() + 1)
+  }
+  if (d.getDate() < 10) {
+    Day = '0' + d.getDate()
+  }
+  return Year + '-' + Month + '-' + Day
+}
+
 export function getCookie (cname) {
   const name = cname + '='
   const decodedCookie = decodeURIComponent(document.cookie)

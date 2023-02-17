@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -311,9 +312,8 @@ public class ArticleController {
 			Systemadmin admin=systemadminService.getSystemadmin((String)(claims.get("sub")));
 			admin.setLastlogin(ts);
 			systemadminService.updateSystemadmin(admin);
-			System.out.println(claims);//claims={sub=admin0214, jti=123, exp=1676535146}
-			if(!claims.get("jti").equals("大總管")) {
-				System.out.println("警告!有非大總管等級管理員，要求所有管理員資料");
+			if(!claims.get("jti").equals("大總管")&&!claims.get("jti").equals("版務")) {
+				System.out.println("警告!有非大總管、版務等級管理員，要求所有管理員資料");
 				return null;
 			}
 			return systemadminService.getALL();
@@ -329,6 +329,7 @@ public class ArticleController {
 	public String adminlogin(@RequestBody Map<String, Object> Data) {
 		Data.get("adminaccount");
 		Data.get("adminpassword");
+		Map<String, String> test = new HashMap<String, String>();
 		Systemadmin systemadmin = systemadminService.getSystemadmin((String)Data.get("adminaccount")) ;
 		if(!systemadminService.checkadmin((String)Data.get("adminaccount"), (String)Data.get("adminpassword"))) {
 			return null;
@@ -337,7 +338,8 @@ public class ArticleController {
 			//產生jwt tocken，並且返回tocken
 			Date expireDate = new Date(System.currentTimeMillis()+5*60*1000); //tocken期限為5分鐘
 			String jwtTocken = Jwts.builder()
-								.setSubject((String)Data.get("adminaccount"))
+								.setClaims(Data)
+								.setSubject((String)Data.get("adminaccount")) //(String)Data.get("adminaccount")
 								.setId(systemadmin.getLevel())
 								.setExpiration(expireDate)
 								.signWith(SignatureAlgorithm.HS256,"MySecret")
@@ -355,10 +357,11 @@ public class ArticleController {
 			Timestamp ts=new Timestamp(date.getTime());
 			String token =authorHeader;
 			Claims claims = Jwts.parser().setSigningKey("MySecret").parseClaimsJws(token).getBody();
-			Systemadmin admin=systemadminService.getSystemadmin((String)(claims.get("sub")));
+			//Systemadmin admin=systemadminService.getSystemadmin((String)(claims.get("sub")));
+			Systemadmin admin=systemadminService.getSystemadmin((String)(claims.get("adminaccount")));
 			admin.setLastlogin(ts);
 			systemadminService.updateSystemadmin(admin);
-			System.out.println(claims);//claims={sub=admin0214, jti=123, exp=1676535146}
+			System.out.println(claims);//claims={adminaccount=admin0214, adminpassword=2023201401, sub=admin0214, jti=大總管, exp=1676597406}
 			return admin;
 		}catch (Exception e) {
 			System.err.println("Error : "+e);
@@ -366,8 +369,21 @@ public class ArticleController {
 		}
 	}
 	
-	
 	//新增管理員
+	@PostMapping("/admin/add")
+	public boolean addadmin(@RequestBody Map<String, Object> Data) {
+		Date date = new Date();
+		Timestamp ts=new Timestamp(date.getTime());
+		
+		Systemadmin systemadmin=new Systemadmin();
+		systemadmin.setAdminaccount("");
+		systemadmin.setAdminname("");
+		systemadmin.setAdminpassword("");
+		systemadmin.setLevel("");
+		systemadmin.setRegdate(date);
+	
+		return systemadminService.addSystemadmin(systemadmin);
+	}
 	
 	
 	//刪除管理員

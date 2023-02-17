@@ -17,7 +17,7 @@
           <router-link class="nav-link" to="/managepage/adminview">管理管理員</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" to="/about">null</router-link>
+          <router-link class="nav-link" @click="logout" to="/login">登出</router-link>
         </li>
         <li class="nav-item">
           <router-link class="nav-link" to="/readpage/articlelist">離開</router-link>
@@ -27,6 +27,18 @@
   </div>
 </nav>
 </template>
+
+<script>
+export default {
+  methods: {
+    logout () {
+      window.clearTimeout()
+      document.cookie = 'tocken=null; expires=Mon, 26 Aug 1996 12:00:00 UTC'
+      this.$router.push('/managepage')
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 .nav-item:hover{

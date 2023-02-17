@@ -6,6 +6,11 @@
 <script>
 import managenavbar from '@/components/ManageNavBar.vue'
 export default {
+  data () {
+    return {
+      countTime: ''
+    }
+  },
   components: {
     managenavbar
   },
@@ -20,7 +25,7 @@ export default {
           console.log(res)
           if (res.data !== null && res.data !== '') {
             alert('歡迎' + res.data.adminname)
-            window.setTimeout(
+            this.countTime = window.setTimeout(
               () => {
                 alert('登入超時，請重新登入') // 2*60*1000=120*1000=120000
                 this.$router.push('/login')
@@ -41,6 +46,9 @@ export default {
     } else {
       this.getadmin()
     }
+  },
+  beforeUnmount () {
+    window.clearTimeout(this.countTime)
   }
 }
 </script>

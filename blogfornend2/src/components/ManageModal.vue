@@ -117,7 +117,7 @@ export default {
     aid () {
       this.getarticle(this.aid)
     },
-    mide () {
+    mid () {
       this.currenttid = []
       this.Article = {}
       this.getmessage(this.mid)
