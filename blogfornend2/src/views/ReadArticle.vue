@@ -20,7 +20,8 @@
     <template v-for="(it,index) in Article.messages" :key="index">
       <div class="d-flex text-warning">
         <p>{{ it.mname }}:</p>
-        <p class="flex-grow-1">{{ it.mcontent }}</p>
+        <p v-if="it.replyid!=null" class="flex-grow-1">(回覆第{{getfloor(it.replyid)}}樓 {{ getname(it.replyid) }}){{ it.mcontent }}</p>
+        <p v-else class="flex-grow-1">{{ it.mcontent }}</p>
         <p>{{ getmessagedate(it.createtime) }}</p>
       </div>
     </template>
@@ -133,6 +134,26 @@ export default {
         return b.createtime < a.createtime ? 1 : -1
       })
       return array
+    },
+    getfloor (target) {
+      let ans = ''
+      let num = 1
+      this.Article.messages.forEach(element => {
+        if (element.mid === target) {
+          ans = num
+        }
+        num++
+      })
+      return ans
+    },
+    getname (target) {
+      let ans = ''
+      this.Article.messages.forEach(element => {
+        if (element.mid === target) {
+          ans = element.mname
+        }
+      })
+      return ans
     }
   },
   mounted () {

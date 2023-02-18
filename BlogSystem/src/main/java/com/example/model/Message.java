@@ -2,11 +2,14 @@ package com.example.model;
 
 import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,6 +31,18 @@ public class Message {
 	
 	@Column(name = "aid")
 	private Integer aid;
+	
+	@Column(name = "replyid")
+	private Integer replyid;
+
+	
+	public Integer getReplyid() {
+		return replyid;
+	}
+
+	public void setReplyid(Integer replyid) {
+		this.replyid = replyid;
+	}
 
 	public Integer getMid() {
 		return mid;

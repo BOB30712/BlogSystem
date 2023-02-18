@@ -10,10 +10,10 @@
         <li class="nav-item">
           <router-link class="nav-link" to="/managepage/article">撰寫文章</router-link>
         </li>
-        <li class="nav-item">
+        <li v-if="(level=='大總管')||(level=='版務')" class="nav-item">
           <router-link class="nav-link" to="/managepage/managearticle">管理文章</router-link>
         </li>
-        <li class="nav-item">
+        <li v-if="level=='大總管'" class="nav-item">
           <router-link class="nav-link" to="/managepage/adminview">管理管理員</router-link>
         </li>
         <li class="nav-item">
@@ -26,15 +26,21 @@
     </div>
   </div>
 </nav>
+<p>目前登入的階級: {{level}}</p>
 </template>
 
 <script>
 export default {
+  props: {
+    level: {
+      type: String
+    }
+  },
   methods: {
     logout () {
       window.clearTimeout()
       document.cookie = 'tocken=null; expires=Mon, 26 Aug 1996 12:00:00 UTC'
-      this.$router.push('/managepage')
+      this.$router.push('/login')
     }
   }
 }

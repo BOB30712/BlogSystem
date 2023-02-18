@@ -8,6 +8,10 @@ const routes = [
     component: ReadPage
   },
   {
+    path: '/test',
+    component: () => import('../views/TestView.vue')
+  },
+  {
     path: '/about',
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
@@ -48,15 +52,15 @@ const routes = [
     component: () => import('../views/ManagePage.vue'),
     children: [
       {
-        path: 'article',
+        path: 'article', // 撰寫文章
         component: () => import('../views/ArticleView.vue')
       },
       {
-        path: 'managearticle',
+        path: 'managearticle', // 文章列表
         component: () => import('../views/ManageArticle.vue')
       },
       {
-        path: 'adminview',
+        path: 'adminview', // 管理員列表
         component: () => import('../views/AdminView.vue')
       }
     ]

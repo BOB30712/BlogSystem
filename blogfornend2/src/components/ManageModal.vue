@@ -61,6 +61,7 @@
                   <th scope="col">匿名</th>
                   <th scope="col">內容</th>
                   <th scope="col">時間</th>
+                  <th scope="col">回覆</th>
                   <th scope="col">刪除</th>
                 </tr>
               </thead>
@@ -71,11 +72,19 @@
                   <td>{{ it.mname }}</td>
                   <td>{{ it.mcontent }}</td>
                   <td>{{ this.filters.ToDateFormat(it.createtime) }}</td>
+                  <td v-if="select!=it.mid"><button @click.prevent="choose(it.mid,it.aid)" type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#collapsewrite">回覆</button></td>
+                  <td v-if="select==it.mid"><button @click.prevent="choose(it.mid,it.aid)" type="button" class="btn btn-danger" data-bs-toggle="collapse" data-bs-target="#collapsewrite">選擇</button></td>
                   <td><button @click.prevent="deletemessage(it.mid)" type="button" class="btn btn-outline-danger">刪</button></td>
                 </tr>
                 </template>
               </tbody>
             </table>
+            <div class="collapse" id="collapsewrite">
+              <div class="text-light input-group">
+                <input v-model="replymsg" type="text" class="form-control rounded-0 bg-dark text-white border-light" aria-describedby="button-sendout">
+                <button @click.prevent="sendreplymsg" class="btn btn-outline-dark" type="button" id="button-sendout">送出</button>
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="w-100 btn btn-primary">關閉</button>
@@ -102,7 +111,11 @@ export default {
       currenttid: [],
       pid: '',
       imgfile: '',
-      imgurl: ''
+      imgurl: '',
+      select: '',
+      replymsg: '',
+      aaid: '',
+      mmid: ''
     }
   },
   props: {
@@ -257,6 +270,30 @@ export default {
         .then(() => {
           this.modal.hide()
           this.$emit('getagain')
+        })
+    },
+    choose (str, id) {
+      this.mmid = str
+      this.aaid = id
+      if (this.select !== str) {
+        this.select = str
+      } else {
+        this.select = ''
+      }
+    },
+    sendreplymsg () {
+      this.axios({
+        method: 'post',
+        url: 'http://localhost:8080/message/reply',
+        data: {
+          aid: this.aaid,
+          replyid: this.mmid,
+          mname: this.filters.getCookie('level') + '/' + this.filters.getCookie('adminname'),
+          mcontent: this.replymsg
+        }
+      })
+        .then(() => {
+          this.modal.hide()
         })
     }
   },

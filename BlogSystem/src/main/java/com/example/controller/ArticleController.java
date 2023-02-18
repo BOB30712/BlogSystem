@@ -255,7 +255,6 @@ public class ArticleController {
 		Timestamp ts=new Timestamp(date.getTime());
 		
 		Message message =new Message();
-		message.setCreatetime(null);
 		message.setMcontent((String)(Data.get("mcontent")));
 		message.setMname((String)(Data.get("mname")));
 		message.setAid((Integer)(Data.get("aid")));
@@ -374,18 +373,45 @@ public class ArticleController {
 	public boolean addadmin(@RequestBody Map<String, Object> Data) {
 		Date date = new Date();
 		Timestamp ts=new Timestamp(date.getTime());
-		
 		Systemadmin systemadmin=new Systemadmin();
-		systemadmin.setAdminaccount("");
-		systemadmin.setAdminname("");
-		systemadmin.setAdminpassword("");
-		systemadmin.setLevel("");
-		systemadmin.setRegdate(date);
-	
+		
+		if(Data.get("aid")==null) {
+			systemadmin.setRegdate(date);
+		}else {
+			systemadmin=systemadminService.getSystemadmin((String)Data.get("adminaccount"));
+		}
+		systemadmin.setAdminaccount((String)Data.get("adminaccount"));
+		systemadmin.setAdminname((String)Data.get("adminname"));
+		systemadmin.setAdminpassword((String)Data.get("adminpassword"));
+		systemadmin.setLevel((String)Data.get("level"));
+		
 		return systemadminService.addSystemadmin(systemadmin);
 	}
 	
-	
 	//刪除管理員
+	@DeleteMapping("/admin/delete/{aid}")
+	public boolean deleteadmin (@PathVariable Integer aid) {
+		return systemadminService.deleteSystemadmin(aid);
+	}
+	
+	//管理員回覆留言
+	@PostMapping("/message/reply")
+	public boolean messageReply(@RequestBody Map<String, Object> Data) {
+		//以管理員階級+名稱當作mname
+		//管理員輸入內容=>mcontent
+		//另外取得要回應的樓層=>replyid
+		Date date = new Date();
+		Timestamp ts=new Timestamp(date.getTime());
+		
+		Message message =new Message();
+		message.setMcontent((String)(Data.get("mcontent")));
+		message.setMname((String)(Data.get("mname")));
+		message.setAid((Integer)(Data.get("aid")));
+		message.setReplyid((Integer)(Data.get("replyid")));
+		message.setCreatetime(ts);
+		
+		return messageService.addmessage(message);
+	}
+	
 	
 }

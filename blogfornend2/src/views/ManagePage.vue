@@ -1,5 +1,5 @@
 <template>
-  <managenavbar/>
+  <managenavbar :level="getlevel"/>
   <router-view/>
 </template>
 
@@ -8,7 +8,8 @@ import managenavbar from '@/components/ManageNavBar.vue'
 export default {
   data () {
     return {
-      countTime: ''
+      countTime: '',
+      getlevel: ''
     }
   },
   components: {
@@ -22,7 +23,9 @@ export default {
         headers: { Authorization: this.filters.getCookie('tocken') }
       })
         .then((res) => {
-          console.log(res)
+          this.getlevel = res.data.level
+          document.cookie = 'level=' + res.data.level
+          document.cookie = 'adminname=' + res.data.adminname
           if (res.data !== null && res.data !== '') {
             alert('歡迎' + res.data.adminname)
             this.countTime = window.setTimeout(

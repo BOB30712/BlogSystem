@@ -40,8 +40,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button v-if="admin.regdate==null" type="button" class="w-100 btn btn-outline-success">新增</button>
-          <button v-else type="button" class="w-100 btn btn-outline-success">儲存</button>
+          <button v-if="admin.regdate==null" @click.prevent="addadmin" type="button" class="w-100 btn btn-outline-success">新增</button>
+          <button v-else type="button" @click.prevent="addadmin" class="w-100 btn btn-outline-success">儲存</button>
         </div>
       </div>
     </div>
@@ -66,7 +66,6 @@ export default {
   },
   watch: {
     admin () {
-      console.log('檢視詳細資料', this.admin)
       this.adminmodal = this.admin
       this.cdate = this.filters.ToDateFormat2(this.admin.regdate)
       this.ldate = this.filters.ToDateFormat2(this.admin.lastlogin)
@@ -78,6 +77,17 @@ export default {
     },
     hide () {
       this.modal.hide()
+    },
+    addadmin () {
+      this.axios({
+        method: 'post',
+        url: 'http://localhost:8080/admin/add',
+        data: this.adminmodal
+      })
+        .then(() => {
+          this.modal.hide()
+          this.$emit('reset')
+        })
     }
   },
   mounted () {

@@ -24,13 +24,13 @@
             <td>{{ this.filters.ToDateFormat(it.regdate) }}</td>
             <td>{{ this.filters.ToDateFormat(it.lastlogin) }}</td>
             <td><button class="btn btn-outline-success" type="button" @click.prevent="opendetail(it)">修改</button></td>
-            <td><button class="btn btn-outline-danger" type="button">刪除</button></td>
+            <td><button class="btn btn-outline-danger" type="button" @click.prevent="deleteAdmin(it.aid)">刪除</button></td>
           </tr>
         </template>
       </tbody>
     </table>
   </div>
-  <modal ref="adminmodal" :admin="admindetail"/>
+  <modal ref="adminmodal" :admin="admindetail" @reset="getAdminList"/>
 </template>
 
 <script>
@@ -53,8 +53,16 @@ export default {
         headers: { Authorization: this.filters.getCookie('tocken') }
       })
         .then((res) => {
-          console.log(res)
           this.adminlist = res.data
+        })
+    },
+    deleteAdmin (id) {
+      this.axios({
+        method: 'delete',
+        url: 'http://localhost:8080/admin/delete/' + id
+      })
+        .then(() => {
+          this.getAdminList()
         })
     },
     opendetail (data) {
