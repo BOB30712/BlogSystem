@@ -1,6 +1,11 @@
 <template>
   <managenavbar :level="getlevel"/>
-  <router-view/>
+  <div class="position-relative">
+    <router-view/>
+    <div class="position-absolute top-0 end-0 me-4">
+      <i class="bi bi-box-seam-fill fs-1 note"></i>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -26,6 +31,7 @@ export default {
           this.getlevel = res.data.level
           document.cookie = 'level=' + res.data.level
           document.cookie = 'adminname=' + res.data.adminname
+          this.getTrigger()
           if (res.data !== null && res.data !== '') {
             alert('歡迎' + res.data.adminname)
             this.countTime = window.setTimeout(
@@ -40,11 +46,21 @@ export default {
           }
         })
         .catch((error) => console.log(error))
+    },
+    getTrigger () {
+      this.axios({
+        method: 'get',
+        url: 'http://localhost:8080/blog/test',
+        headers: { Authorization: this.filters.getCookie('tocken') }
+      })
+        .then((res) => {
+          console.log(res)
+        })
     }
   },
   mounted () {
     if (this.filters.getCookie('tocken') === '') {
-      alert('請重新登入')
+      alert('尚未登入，請重新登入')
       this.$router.push('/login')
     } else {
       this.getadmin()
@@ -55,3 +71,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.note {
+  color: yellow;
+}
+.note:hover{
+  color: red;
+}
+</style>

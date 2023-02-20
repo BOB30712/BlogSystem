@@ -1,6 +1,14 @@
 export function ToDateFormat (date) {
   const d = new Date(date)
-  return (d.getMonth() + 1) + '/' + d.getDate() + '  ' + d.getHours() + ':' + d.getMinutes()
+  let Month = (d.getMonth() + 1)
+  let day = d.getDate()
+  if (Month < 10) {
+    Month = '0' + Month
+  }
+  if (day < 10) {
+    day = '0' + day
+  }
+  return Month + '/' + day + '  ' + d.getHours() + ':' + d.getMinutes()
 }
 
 export function ToDateFormat2 (date) {

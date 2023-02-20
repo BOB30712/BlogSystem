@@ -24,10 +24,6 @@ export default {
         {
           tid: 4,
           tname: '怎麼會這樣'
-        },
-        {
-          tid: 5,
-          tname: '窩不知道'
         }
       ]
     }
@@ -39,7 +35,6 @@ export default {
         url: 'http://localhost:8080/Target/get/all'
       })
         .then((response) => {
-          console.log(response)
           this.targetlist = response.data
         })
         .catch((error) => console.log(error))

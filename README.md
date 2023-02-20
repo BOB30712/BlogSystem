@@ -97,7 +97,7 @@ Windows 10 安裝WSL2
 * Docker Containers命名     
   * 如果未指定Container名稱，Docker會隨機指定名稱例如:crazy jones    
 * Dockerimage檔相關指令   
-  * 創建檔案:docker build . -t docker-demo-app
+  * 創建檔案:docker build -t docker-demo-app .
   * 查詢目前存在的image檔案: docker images
   * 執行container: docker run -p 3000:3000 -it <your-image-id> 
   * 關閉container:ctrl + c或是開啟另外一個 terminal，然後透過指令 docker ps 找到運行中的 Container ID，然後在輸入 docker stop <ContainerID>

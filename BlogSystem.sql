@@ -32,7 +32,7 @@ create table article_target(
   tid   int
 );
 
-select * from arttar;
+select * from message;
 INSERT INTO photo(panme) VALUES ('photo001');
 INSERT INTO article(title,createtime,content,pid)  VALUES ('第一個標題',NOW(),'第一個內容',1);
 INSERT INTO target (tname) VALUES ('生活');
@@ -57,3 +57,64 @@ INSERT INTO systemadmin(adminaccount,adminpassword,adminname,level,regdate)
 VALUES ('admin0214','2023201401','admin','大總管',NOW());
 INSERT INTO systemadmin(adminaccount,adminpassword,adminname,level,regdate)
 VALUES ('admin2023','2023201401','ad01','大總管',NOW());
+
+INSERT INTO systemadmin(adminaccount,adminpassword,adminname,level,regdate)
+VALUES ('admin0216','2023021616','流星雲','版務',NOW());
+INSERT INTO systemadmin(adminaccount,adminpassword,adminname,level,regdate)
+VALUES ('admin1611','2023021616','解凍豬腳','版務',NOW());
+INSERT INTO systemadmin(adminaccount,adminpassword,adminname,level,regdate)
+VALUES ('noname0216','2023021616','小明','韭菜',NOW());
+ALTER TABLE message
+ADD column adminid int;
+ALTER TABLE message
+ADD foreign key (adminid) references systemadmin(aid);
+
+INSERT INTO message(mname,createtime,mcontent,aid,adminid)
+VALUES ('test',NOW(),'這是一個回覆測試',47,5);
+ALTER TABLE message DROP FOREIGN KEY message_ibfk_2;
+ALTER TABLE message
+DROP column adminid;
+select * from message;
+ALTER TABLE message
+ADD column replyid int;
+
+INSERT INTO message(mname,createtime,mcontent,aid,replyid)
+VALUES ('test',NOW(),'這是二個回覆測試',47,17);
+
+#新增文章、留言trigger
+#將相關紀錄載入資料表blog_trigger
+#blog_trigger(id順序、tablename資料表名稱、action動作、time時間、content內容)
+create table blog_trigger(
+id int NOT NULL auto_increment,
+tablename VARCHAR(15),
+action VARCHAR(10),
+time DATETIME,
+content VARCHAR(20),
+PRIMARY KEY(id)
+);
+select * from blog_trigger;
+select * from article;
+select * from message;
+#新增文章trigger
+DELIMITER $$
+CREATE TRIGGER article_insert after insert
+ON article FOR EACH ROW
+BEGIN
+  declare message varchar(20);
+  SET message = NEW.title;
+  INSERT INTO blog_trigger(tablename,action,time,content) 
+  VALUES ('article','insert',now(),message);
+END $$
+DELIMITER ;
+#新增留言trigger
+DELIMITER $$
+CREATE TRIGGER message_insert after insert
+ON message FOR EACH ROW
+BEGIN
+  declare message varchar(20);
+  SET message = CONCAT(NEW.mname,'在',NEW.aid,'進行留言');
+  INSERT INTO blog_trigger(tablename,action,time,content) 
+  VALUES ('message','insert',now(),message);
+END $$
+DELIMITER ;
+

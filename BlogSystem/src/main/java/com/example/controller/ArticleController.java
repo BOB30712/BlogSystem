@@ -47,11 +47,13 @@ import com.example.model.Message;
 import com.example.model.Photo;
 import com.example.model.Systemadmin;
 import com.example.model.Target;
+import com.example.model.TriggerBlog;
 import com.example.service.ArticleService;
 import com.example.service.MessageService;
 import com.example.service.PhotoService;
 import com.example.service.SystemadminService;
 import com.example.service.TargetService;
+import com.example.service.TriggerBlogService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -72,6 +74,10 @@ public class ArticleController {
 	private MessageService messageService;
 	@Autowired
 	private SystemadminService systemadminService;
+	@Autowired
+	private TriggerBlogService triggerBlogService;
+	
+	
 	
 	private static final Logger logger
     = LoggerFactory.getLogger(ArticleController.class);
@@ -352,14 +358,10 @@ public class ArticleController {
 	public Systemadmin getadmin(@RequestHeader HttpHeaders  headers,HttpServletRequest request) {
 		String authorHeader = request.getHeader(AUTHORIZATION);
 		try {
-			Date date = new Date();
-			Timestamp ts=new Timestamp(date.getTime());
 			String token =authorHeader;
 			Claims claims = Jwts.parser().setSigningKey("MySecret").parseClaimsJws(token).getBody();
 			//Systemadmin admin=systemadminService.getSystemadmin((String)(claims.get("sub")));
 			Systemadmin admin=systemadminService.getSystemadmin((String)(claims.get("adminaccount")));
-			admin.setLastlogin(ts);
-			systemadminService.updateSystemadmin(admin);
 			System.out.println(claims);//claims={adminaccount=admin0214, adminpassword=2023201401, sub=admin0214, jti=大總管, exp=1676597406}
 			return admin;
 		}catch (Exception e) {
@@ -413,5 +415,30 @@ public class ArticleController {
 		return messageService.addmessage(message);
 	}
 	
+	@GetMapping("/blog/test")
+	public List<TriggerBlog> testBlog(@RequestHeader HttpHeaders  headers,HttpServletRequest request){
+		
+		String authorHeader = request.getHeader(AUTHORIZATION);
+		try {
+			Date date = new Date();
+			Timestamp ts=new Timestamp(date.getTime());
+			String token =authorHeader;
+			Claims claims = Jwts.parser().setSigningKey("MySecret").parseClaimsJws(token).getBody();
+			Systemadmin admin=systemadminService.getSystemadmin((String)(claims.get("adminaccount")));
+			if(admin.getLastlogin()==null) {
+				admin.setLastlogin(ts);//更新最後登入的日期
+				systemadminService.updateSystemadmin(admin);
+				return null;
+			}
+			List<TriggerBlog> ans=triggerBlogService.getall().stream().filter(t->t.getTime().compareTo(admin.getLastlogin())>0).collect(Collectors.toList());
+			admin.setLastlogin(ts);//更新最後登入的日期
+			systemadminService.updateSystemadmin(admin);
+			return ans;
+		}catch (Exception e) {
+			System.err.println("Error : "+e);
+			return null;
+		}
+		
+	}
 	
 }

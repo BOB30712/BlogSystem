@@ -1,11 +1,13 @@
 <template>
-  <p class="mb-0 header d-flex"><span class="fw-bold title mb-0 d-block px-2 me-2">標題</span>{{Article.title}}</p>
-  <p class="mb-0 header d-flex"><span class="fw-bold title mb-0 d-block px-2 me-2">標籤</span>
-    <template v-for="(it,index) in Article.targets" :key="index">
-      {{ it.tname }} <span v-if="index+1!=Article.targets.length">/</span>
-    </template>
-  </p>
-  <p class="mb-0 header d-flex"><span class="fw-bold title d-block px-2 me-2">時間</span>{{createDate}}</p>
+  <div class="container">
+    <p class="mb-0 header d-flex"><span class="fw-bold title mb-0 d-block px-2 me-2">標題</span>{{Article.title}}</p>
+    <p class="mb-0 header d-flex"><span class="fw-bold title mb-0 d-block px-2 me-2">標籤</span>
+      <template v-for="(it,index) in Article.targets" :key="index">
+        {{ it.tname }} <span v-if="index+1!=Article.targets.length">/</span>
+      </template>
+    </p>
+    <p class="mb-0 header d-flex"><span class="fw-bold title d-block px-2 me-2">時間</span>{{createDate}}</p>
+  </div>
   <div class="container mt-3">
     <p>內文:</p>
     <div v-html="Article.content"></div>

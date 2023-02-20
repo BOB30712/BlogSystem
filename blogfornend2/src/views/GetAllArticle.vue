@@ -51,7 +51,6 @@ export default {
           url: 'http://localhost:8080/Article/getAll'
         })
           .then((response) => {
-            console.log(response)
             this.ArticleList = response.data
             // this.imghref = 'http://localhost:8080/getimg/' + response.data.photo.pid + '/' + 123
           })
@@ -62,7 +61,6 @@ export default {
           url: 'http://localhost:8080/Article/getlist/' + tid
         })
           .then((response) => {
-            console.log(response)
             this.ArticleList = response.data
           })
           .catch((error) => console.log(error))
@@ -74,10 +72,12 @@ export default {
     }
   },
   mounted () {
+    console.log('#標籤', this.$route.params.id)
     if (this.$route.params.id === undefined) {
       this.getArticleList()
     } else {
       this.getArticleList(this.$route.params.id)
+      this.tname = this.$route.params.tname
     }
   }
 }
