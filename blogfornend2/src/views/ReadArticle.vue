@@ -19,12 +19,16 @@
     <div class="text-center">
       <p class="text-warning fs-4" v-if="nomessage">尚未有留言</p>
     </div>
-    <template v-for="(it,index) in Article.messages" :key="index">
-      <div class="d-flex text-warning">
-        <p>{{ it.mname }}:</p>
-        <p v-if="it.replyid!=null" class="flex-grow-1">(回覆第{{getfloor(it.replyid)}}樓 {{ getname(it.replyid) }}){{ it.mcontent }}</p>
-        <p v-else class="flex-grow-1">{{ it.mcontent }}</p>
-        <p>{{ getmessagedate(it.createtime) }}</p>
+    <template v-for="(it,index) in message" :key="index">
+      <div v-if="it.replyid!=null" class="d-flex text-warning">
+        <p class="mb-0">└──{{ it.mname }}:</p>
+        <p class="flex-grow-1 mb-0">(回覆 {{getname(it.replyid) }}){{ it.mcontent }}</p>
+        <p class="mb-0">{{ getmessagedate(it.createtime) }}</p>
+      </div>
+      <div v-else class="d-flex text-warning">
+        <p class="mb-0">{{ it.mname }}:</p>
+        <p class="flex-grow-1 mb-0">{{ it.mcontent }}</p>
+        <p class="mb-0">{{ getmessagedate(it.createtime) }}</p>
       </div>
     </template>
   </div>
@@ -78,6 +82,8 @@ export default {
         date: '2023-01-19T06:58:56.000+00:00',
         content: '<p>修改service的新增方法</p><p>第5次測試</p>'
       },
+      message: [],
+      replymessage: [],
       mname: '',
       mcontent: '',
       nomessage: true
@@ -90,16 +96,42 @@ export default {
         url: 'http://localhost:8080/Article/get/' + this.id
       })
         .then((response) => {
-          console.log(response)
           this.Article = response.data
           this.imghref = 'http://localhost:8080/getimg/' + response.data.photo.pid + '/' + '圖片'
           if (this.Article.messages.length < 1) {
             this.nomessage = true
           } else {
             this.nomessage = false
-            this.Article.messages.sort((a, b) => {
+            this.message = []
+            this.replymessage = []
+            this.Article.messages.forEach((element) => {
+              if (element.replyid == null) {
+                this.message.push(element)
+              } else {
+                this.replymessage.push(element)
+              }
+            })
+            this.message.sort((a, b) => { // 將'非回覆'的留言由時間早晚升冪排列
               return b.createtime < a.createtime ? 1 : -1
             })
+            this.replymessage.sort((a, b) => { // 將'回覆'的留言由時間早晚升冪排列
+              return b.createtime < a.createtime ? 1 : -1
+            })
+
+            const num = this.replymessage.length // 在留言array增加與回覆留言array長度相同的空值
+            for (let i = 0; i < num; i++) {
+              this.message.push('')
+            }
+            this.message.forEach((element, index) => {
+              this.replymessage.forEach((reply) => {
+                if (element.mid === reply.replyid) {
+                  this.message.splice(index + 1, 0, reply)
+                }
+              })
+            })
+            for (let i = 0; i < num; i++) { // 將留言array額外增加的空值刪除
+              this.message.pop()
+            }
           }
         })
         .catch((error) => console.log(error))
@@ -123,8 +155,7 @@ export default {
           aid: this.Article.aid
         }
       })
-        .then((response) => {
-          console.log(response)
+        .then(() => {
           this.getArticle()
         })
         .catch((error) => console.log(error))

@@ -111,10 +111,23 @@ DELIMITER $$
 CREATE TRIGGER message_insert after insert
 ON message FOR EACH ROW
 BEGIN
-  declare message varchar(20);
+  declare message varchar(20); 
+  declare gettitle VARCHAR(50);
+  CALL getArticle (43);
   SET message = CONCAT(NEW.mname,'在',NEW.aid,'進行留言');
   INSERT INTO blog_trigger(tablename,action,time,content) 
   VALUES ('message','insert',now(),message);
 END $$
 DELIMITER ;
 
+select * from article;
+
+#測試sproc
+DELIMITER $$
+CREATE PROCEDURE getArticle(`articleID` int)
+BEGIN
+	select title from article where aid = articleID;
+END$$
+DELIMITER ;
+
+CALL getArticle (43);

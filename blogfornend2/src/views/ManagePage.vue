@@ -3,18 +3,35 @@
   <div class="position-relative">
     <router-view/>
     <div class="position-absolute top-0 end-0 me-4">
-      <i class="bi bi-box-seam-fill fs-1 note"></i>
+      <i @click.prevent="toArray" class="bi bi-box-seam-fill fs-1 note"></i>
     </div>
+      <div class="toast-container position-fixed bottom-0 end-0">
+        <template v-for="(it,index) in triggerdata" :key="index">
+          <div class="liveToast toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+              <strong class="me-auto text-dark">新增一筆{{ it.tablename }}</strong>
+              <small>{{this.filters.ToDateFormat(it.time)}}</small>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body text-dark">
+              新增內容: {{ it.content }}
+            </div>
+          </div>
+        </template>
+      </div>
   </div>
 </template>
 
 <script>
 import managenavbar from '@/components/ManageNavBar.vue'
+import { Toast } from 'bootstrap'
 export default {
   data () {
     return {
       countTime: '',
-      getlevel: ''
+      getlevel: '',
+      triggerdata: [],
+      triggertoast: []
     }
   },
   components: {
@@ -54,8 +71,22 @@ export default {
         headers: { Authorization: this.filters.getCookie('tocken') }
       })
         .then((res) => {
-          console.log(res)
+          this.triggerdata = res.data
         })
+    },
+    toArray () {
+      this.triggertoast = []
+      Array.from(document.querySelectorAll('.liveToast'))
+        .forEach((toastNode) => {
+          const t = new Toast(toastNode)
+          this.triggertoast.push(t)
+        })
+      this.openToast()
+    },
+    openToast () {
+      this.triggertoast.forEach((toast) => {
+        toast.show()
+      })
     }
   },
   mounted () {
